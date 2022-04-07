@@ -1,0 +1,5 @@
+# Ignore Latex Auxilliary files
+*.aux
+*.log
+*.out
+*.synctex.gz
