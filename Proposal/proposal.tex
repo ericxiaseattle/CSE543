@@ -9,7 +9,7 @@
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
-     \usepackage[preprint]{neurips_2021}
+     \usepackage[final]{neurips_2021}
 
 % to compile a camera-ready version, add the [final] option, e.g.:
 %     \usepackage[final]{neurips_2021}
@@ -52,55 +52,49 @@
 %\begin{abstract}
 %\end{abstract}
 
-\section{Proposal}
+\section{Introduction}
 
 The primary goal of most deep learning models is to minimize the loss function.
-Optimizers are crucial to this end by fine-tuning hyperparameters such that the model will actually converge on a minimum instead of overshooting or moving away from it,
-and do so in a computationally efficient manner.
-Whereas existing optimizers are intuitively straightforward in convex learning, in non-convex settings they (notably for Adam-type adaptive gradient methods)
-often require the strong assumption of a universally bounded gradient for guaranteeing deterministic behavior: there exists some $G > 0$ s.t.
+Optimizers are crucial for the task of updating model weights such that the model will actually converge to a minimum in a computationally efficient manner instead of overshooting or moving away from the minimum. While existing optimizers are intuitively straightforward in convex learning, in non-convex settings they (notably for Adam-type adaptive gradient methods)
+often require the assumption on the boundedness of gradients for achieving convergence.
 
-\[
-  ||\nabla f(x)|| \leq G
-\]
+For example, for an objective function  $f(x)$ satisfying
+Polyak-Łojasiewicz conditions \cite{POLYAK1963864},  convergence rates of $O(1/T)$ were established for Stochastic Gradient Descent (SGD) under the assumption that $\mathbb{E}[||\nabla f_i(x_k)||^2] \leq C^2$ for all $x_k$ and some $C$, where $f_i$ typically represents the fit on an individual training sample \cite{DBLP:journals/corr/KarimiNS16}.
 
-for all $x\in\mathbb{R}^d$, where $f(x)$ is the loss function and $d$ is the dimensions the cost function has.
-While convenient, the imposition of this assumption can be hard to verify in practical settings, hence in recent years there has been a trend in research efforts
-towards analyzing existing optimization methods and proposing novel methods without this assumption.
+While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions.
 
-We plan to survey and analyze some recent papers in this realm related to RMSProp~\cite{shi2021rmsprop}, SGD~\cite{https://doi.org/10.48550/arxiv.2006.10311},
-SGDM~\cite{NEURIPS2020_d3f5d4de}, ADAM~\cite{https://doi.org/10.48550/arxiv.2106.08208}, and self-tuning step sizes~\cite{https://doi.org/10.48550/arxiv.2202.05791},
+\section{Proposal and Selected Papers}
+We plan to survey and analyze five recent papers on convergence issues without bounded gradient assumption of optimization algorithms
+including Root Mean Squared Propagation (RMSProp)~\cite{shi2021rmsprop}, SGD~\cite{https://doi.org/10.48550/arxiv.2006.10311},
+SGD with momentum (SGDM)~\cite{NEURIPS2020_d3f5d4de}, Adaptive Moment Estimation (Adam)~\cite{https://doi.org/10.48550/arxiv.2106.08208}, and Adaptive Subgradient (AdaGrad)~\cite{https://doi.org/10.48550/arxiv.2202.05791},
 comparing and contrasting their approaches, methodologies, and findings, and discussing their broader implications for the convergence problem and the general field of optimizers.
 
-As a non-momentum specificity of Adam, RMSProp is known for performing well empirically, despite theoretical analyses of it suggesting divergence even for simple complex functions.~\cite{shi2021rmsprop}.
-With their paper published at ICRL 2021, Shi et al. examined a counter-example presented by Reddi et al.~\cite{DBLP:journals/corr/abs-1904-09237} in 2018 in their study of the convergence of Adam,
-discovering a gap in their analysis of convergence for large $\beta_2$ parameter. Shi et al. ran simulations based on this gap.
-Plotting whether convergence was achieved for different choices of $\beta_2$ for RMSprop, they found that in general, there was a continuous and nontrivial curve sloping upwards, from divergence to
+As a non-momentum specificity of Adam~\cite{https://doi.org/10.48550/arxiv.1412.6980}, RMSProp~\cite{tieleman2012lecture} is known for performing well empirically, despite theoretical analyses of it suggesting divergence even for simple complex functions.
+In their ICRL 2021 paper, Shi et al.~\cite{shi2021rmsprop} examined a counter-example presented by Reddi et al.~\cite{DBLP:journals/corr/abs-1904-09237} in 2018 in their study of the convergence of Adam,
+discovering a gap in their analysis of convergence for large $\beta_2$ parameter. They then ran simulations based on this gap. By plotting whether convergence was achieved for different choices of $\beta_2$ for RMSprop, they found that in general, there was a continuous and nontrivial curve sloping upwards, from divergence to
 convergence, suggesting their conjecture that RMSprop converges for large enough $\beta_2$. This paper is notable and interesting as it is the first to prove the convergence of RMSprop
 without the bounded gradient assumption.
 
-In their 2021 paper "SGD for Structured Nonconvex Functions: Learning Rates, Minibatching and Interpolation", Gower et al. show that SGD converges at a rate of $\mathcal{O}(1/\sqrt{k})$
-on quasar (strongly) convex functions and prove linear convergence to a neighborhood for functions satisfying the Polyak-Lojasiewicz condition, a generalization of strongly-convex functions,
-without any bounded gradient assumption, instead relying on the expected residual (ER) condition for support.~\cite{https://doi.org/10.48550/arxiv.2006.10311} The significance of this study
+In their AISTATS 2021 paper, Gower et al.~\cite{https://doi.org/10.48550/arxiv.2006.10311} showed that SGD converges at a rate of $\mathcal{O}(1/\sqrt{k})$
+on Quasar (Strongly) Convex functions and proved linear convergence to a neighborhood for functions satisfying the Polyak-Łojasiewicz conditions without any bounded gradient assumption, instead relying on the expected residual (ER) condition for support. The significance of this study
 resides in the provided insights on the complexity of minibatching and determination of optimal batch sizes, as well as the demonstration that for models interpolating the training data,
-the ER condition could be discarded and still give SOTA results.
+the ER condition could be discarded and still give state-of-the-art results.
 
 \pagebreak % to avoid breaking paragraph in middle
 
-The third paper we chose is interesting for a similar reason: it is the first convergence guarantee for Multistage SGDM—Multistage refers to applying a constant stepsize
-which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.
-Although SGDM has an upper hand against SGD empirically, the theoretical understanding of momentum in the stochastic case is far from complete, given that existing analyses of SGDM
-either "provide worse convergence bounds than those of SGD, or assume Lipschitz or quadratic objectives, which fail to hold in practice."~\cite{NEURIPS2020_d3f5d4de}
-More specifically, the researchers demonstrate that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions.
+The third paper we chose is interesting for a similar reason: it is the first convergence guarantee for Multistage SGDM without uniformly bounded gradient assumption by Liu et al.~\cite{NEURIPS2020_d3f5d4de}—Multistage refers to applying a constant stepsize
+which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased. Moreover, 
+although SGDM has an upper hand against SGD empirically, the theoretical understanding of momentum in the stochastic case is far from complete, given that previous analyses of SGDM
+either "provide worse convergence bounds than those of SGD, or assume Lipschitz or quadratic objectives, which fail to hold in practice." This work demonstrated that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption.
 
-Huang et. al~\cite{https://doi.org/10.48550/arxiv.2106.08208} propose a faster, universal framework for adaptive gradients that includes most already existing
+In their NeurIPS 2021 paper, Huang et al.~\cite{https://doi.org/10.48550/arxiv.2106.08208} proposed a faster and universal framework for adaptive gradients that includes most already existing
 adaptive gradient forms of optimizers. Under the current framework of adaptive gradients, the adaptive learning rate varies between individual algorithms,
-e.g. Adam~\cite{doi:10.1137/19M1263443} vs. AdaGrad-Norm~\cite{ward2018adagrad}. Not only does the proposed framework have a universal adaptive learning rate, it also guarantees
+e.g. Adam vs. AdaGrad-Norm~\cite{ward2018adagrad}. Not only does the proposed framework have a universal adaptive learning rate, it also guarantees
 convergence without assuming boundedness of the gradient. Furthermore, they experimentally validate the outperformance of their algorithm against existing adaptive algorithms,
 demonstrating the signifance of this proposition as it is both more generalizable theoretically and empirically better in performance.
 
-Faw et. al's recent work in SGD analysis~\cite{https://doi.org/10.48550/arxiv.2202.05791} holds a particular significance in their demonstration that
-neither the bounded gradient assumption nor the bounded variance assumption are necessary in AdaGrad-Norm~\cite{ward2018adagrad},
+Finally, last paper we look at is a very recent study from Faw et al.~\cite{https://doi.org/10.48550/arxiv.2202.05791} on convergence rates of AdaGrad-Norm\cite{ward2018adagrad}. This work holds a particular significance in their demonstration that
+neither the bounded gradient assumption nor the bounded variance assumption are necessary in AdaGrad-Norm\cite{ward2018adagrad},
 thus adaptive gradient methods converge in much broader situations than previously understood.
 
 \medskip
