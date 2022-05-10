@@ -44,7 +44,16 @@
   Roger Wang, \ Eric Xia \\
   \texttt{rogerwyf@uw.edu, ericxia@uw.edu} \\
 }
-
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+	colorlinks,
+	linkcolor={red!50!black},
+	citecolor={blue!50!black},
+	urlcolor={blue!80!black}
+}
 \begin{document}
 
 \maketitle
@@ -61,11 +70,25 @@ often require the assumption on the boundedness of gradients for achieving conve
 For example, for an objective function  $f(x)$ satisfying
 Polyak-Łojasiewicz conditions \cite{POLYAK1963864},  convergence rates of $O(1/T)$ were established for Stochastic Gradient Descent (SGD) under the assumption that $\mathbb{E}[||\nabla f_i(x_k)||^2] \leq C^2$ for all $x_k$ and some $C$, where $f_i$ typically represents the fit on an individual training sample \cite{DBLP:journals/corr/KarimiNS16}.
 
-While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions.
-
+While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. In this report, we look at some results from the latest research on optimization methods including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Adaptive Gradient (AdaGrad) (\hyperref[section5]{Section 5}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 6}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 7}).
 \section{General Assumptions}
-\newpage
+In a stochastic setting, the optimization problem for a neural network training process can be written as a finite-sum problem:
+\[
+\min_{x \in \mathbb{R}^d} f(x) = \frac{1}{n}\sum_{j = 0}^{n - 1} f(x, s_j)
+\]
+where $f(x, s_j)$ represents the loss function contributed by the randomly shuffled sample batch $s_j$.\\
+\newline
+Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ be the full gradient and the stochastic gradient with respect to the sampled batch $s_t$ of the objective function $f$ at time or iteration $t$, respectively. Below we list the common assumptions in standard stochastic optimization that are either explicitly stated or implied in the papers covered in this report. 
+\begin{enumerate}[leftmargin=*]
+	\item \textit{\textbf{Lower boundedness}: $f$ is lower-bounded by some function $f^*$.}
+	\item \textit{\textbf{Smoothness}: $f$ is $L$-smooth or $\nabla f$ is $L$-Lipschitz continuous for some constant $L$.}
+	\item \textit{\textbf{Unbiased gradients}: $\forall t, \mathbb{E}_{s_t}[\tilde{g}_t] = g_t$}.
+	\item \textit{\textbf{Independence}: the random samples $s_j$'s are independent.}
+	\item \textit{\textbf{Bounded variance}: $Var_{s_t}(\tilde{g}_t) = \mathbb{E}_{s_t}[\tilde{g}_t - g_t] \leq \sigma^2$ for some $\sigma > 0$.}
+\end{enumerate}
+Furthermore, each paper in this report may have additional assumptions which will be included in their corresponding section. It is worth mentioning that none of these assumptions is related to the boundedness to gradient $g_t$, which is often the key assumption utilized by previous theoretical work.
 \section{Stochastic Gradient Descent for Structured Nonconvex Functions}
+\label{section3}
 \subsection{Previous research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Result}
@@ -73,6 +96,7 @@ While convenient, the imposition of assumptions on the boundedness of gradients 
 \subsection{Discussion}
 \newpage
 \section{Stochastic Gradient Descent with Momentum}
+\label{section4}
 \subsection{Previous research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Result}
@@ -80,6 +104,7 @@ While convenient, the imposition of assumptions on the boundedness of gradients 
 \subsection{Discussion}
 \newpage
 \section{AdaGrad}
+\label{section5}
 \subsection{Previous research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Result}
@@ -87,6 +112,7 @@ While convenient, the imposition of assumptions on the boundedness of gradients 
 \subsection{Discussion}
 \newpage
 \section{RMSProp}
+\label{section6}
 \subsection{Previous research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Result}
@@ -94,6 +120,7 @@ While convenient, the imposition of assumptions on the boundedness of gradients 
 \subsection{Discussion}
 \newpage
 \section{Adam}
+\label{section7}
 \subsection{Previous research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Result}
