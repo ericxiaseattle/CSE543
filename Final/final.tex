@@ -70,7 +70,9 @@ often require the assumption on the boundedness of gradients for achieving conve
 For example, for an objective function  $f(x)$ satisfying
 Polyak-Łojasiewicz conditions \cite{POLYAK1963864},  convergence rates of $O(1/T)$ were established for Stochastic Gradient Descent (SGD) under the assumption that $\mathbb{E}[||\nabla f_i(x_k)||^2] \leq C^2$ for all $x_k$ and some $C$, where $f_i$ typically represents the fit on an individual training sample \cite{DBLP:journals/corr/KarimiNS16}.
 
-While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. In this report, we look at some results from the latest research on optimization methods including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Adaptive Gradient (AdaGrad) (\hyperref[section5]{Section 5}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 6}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 7}).
+While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. 
+
+In this report, we will survey and analyze results from five latest research papers on the convergence of optimization methods including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Adaptive Gradient (AdaGrad) (\hyperref[section5]{Section 5}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 6}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 7}), comparing and contrasting their approaches, methodologies, and findings as well as discussing their broader implications for the convergence problem and the general field of optimizers.
 \section{General Assumptions}
 In a stochastic setting, the optimization problem for a neural network training process can be written as a finite-sum problem:
 \[
@@ -78,7 +80,7 @@ In a stochastic setting, the optimization problem for a neural network training 
 \]
 where $f(x, s_j)$ represents the loss function contributed by the randomly shuffled sample batch $s_j$.\\
 \newline
-Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ be the full gradient and the stochastic gradient with respect to the sampled batch $s_t$ of the objective function $f$ at time or iteration $t$, respectively. Below we list the common assumptions in standard stochastic optimization that are either explicitly stated or implied in the papers covered in this report. 
+Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ be the full gradient and the stochastic gradient with respect to the sampled batch $s_t$ of the objective function $f$ at time or iteration $t$, respectively. Below we list the common assumptions in standard stochastic optimization that are either explicitly stated or implied in the papers covered in this report:
 \begin{enumerate}[leftmargin=*]
 	\item \textit{\textbf{Lower boundedness}: $f$ is lower-bounded by some function $f^*$.}
 	\item \textit{\textbf{Smoothness}: $f$ is $L$-smooth or $\nabla f$ is $L$-Lipschitz continuous for some constant $L$.}
