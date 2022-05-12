@@ -77,7 +77,7 @@ Polyak-Łojasiewicz conditions \cite{POLYAK1963864},  convergence rates of $O(1/
 
 While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. 
 
-In this report, we will survey and analyze results from five latest research papers on the convergence of optimization methods including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Adaptive Gradient (AdaGrad) (\hyperref[section5]{Section 5}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 6}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 7}), comparing and contrasting their approaches, methodologies, and findings as well as discussing their broader implications for the convergence problem and the general field of optimizers.
+In this report, we will survey and analyze results from five latest research papers on the convergence of optimization methods including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 5}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 6}), comparing and contrasting their approaches, methodologies, and findings as well as discussing their broader implications for the convergence problem and the general field of optimizers.
 \section{General Assumptions}
 In a stochastic setting, the optimization problem for a neural network training process can be written as a finite-sum problem:
 \[
@@ -101,7 +101,6 @@ Throughout this report, we will refer the above as \textit{General Assumptions}.
 \subsection{Main Result}
 \subsection{Key Approaches \& Insights}
 \subsection{Discussion}
-\newpage
 \section{Stochastic Gradient Descent with Momentum}
 \label{section4}
 In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provided a novel convergence analysis for SGDM and Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.} SGDM without bounded gradient assumptions. This work also demonstrated that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption. 
@@ -167,15 +166,6 @@ Theorem 4.1 and Theorem 4.2 show that under both nonconvex and strongly convex s
 For Multistage SGDM, Theorem 4.3 is the first theoretical result that guarantees its convergence. Moreover, it was demonstrated from the convergence bound that large learning rates are allowed in the first a few stages to accelerate the initial convergence, and smaller learning rates can refine the radius of the stationary distribution in the later stages, which is an advantage of stagewise training compared to plain SGDM.
 
 However, the convergence analysis in this paper does have some weaknesses and limitations: First of all, although it is theoretically shown that SGDM is "at least as fast as" SGD, this paper did not explore the advantages of SGDM compared to SGD in detail. In addition, Theorem 4.2 assumes a lower-bound of timestamp/iteration for the result to be valid, and this lower-bound could be a problem for some choices of $\beta$ (e.g, when $\beta = 0.995$, $t_0 = 138$). Finally, equation (1) from Theorem 4.3 puts a strong restriction on the choice of learning rates and momentum weights at all stages, which makes this stage-wise training setup impractical.
-\newpage
-\section{AdaGrad}
-\label{section5}
-\subsection{Previous Research \& Motivation}
-\subsection{Additional Assumptions}
-\subsection{Main Result}
-\subsection{Key Approaches \& Insights}
-\subsection{Discussion}
-\newpage
 \section{RMSProp}
 \label{section6}
 \subsection{Previous research \& Motivation}
@@ -183,7 +173,6 @@ However, the convergence analysis in this paper does have some weaknesses and li
 \subsection{Main Result}
 \subsection{Key Approaches \& Insights}
 \subsection{Discussion}
-\newpage
 \section{Adam}
 \label{section7}
 \subsection{Previous research \& Motivation}
@@ -191,7 +180,6 @@ However, the convergence analysis in this paper does have some weaknesses and li
 \subsection{Main Result}
 \subsection{Key Approaches \& Insights}
 \subsection{Discussion}
-\newpage
 \section{Addition Dicussion \& Comments}
 \section{Future Research}
 \newpage
