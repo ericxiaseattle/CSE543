@@ -54,6 +54,11 @@
 	citecolor={blue!50!black},
 	urlcolor={blue!80!black}
 }
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
 \begin{document}
 
 \maketitle
@@ -88,7 +93,7 @@ Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ 
 	\item \textit{\textbf{Independence}: the random samples $s_j$'s are independent.}
 	\item \textit{\textbf{Bounded variance}: $Var_{s_t}(\tilde{g}_t) = \mathbb{E}_{s_t}[\tilde{g}_t - g_t] \leq \sigma^2$ for some $\sigma > 0$.}
 \end{enumerate}
-Furthermore, each paper in this report may have additional assumptions which will be included in their corresponding section. It is worth mentioning that none of these assumptions is related to the boundedness to gradient $g_t$, which is often the key assumption utilized by previous theoretical work.
+Throughout this report, we will refer the above as \textit{General Assumptions}. Furthermore, each paper in this report may have additional assumptions which will be included in their corresponding section. It is worth mentioning that none of these assumptions is related to the boundedness to gradient $g_t$, which is often the key assumption utilized by previous theoretical work, and was the first convergence guarantee for SGDM in a multistage setting.
 \section{Stochastic Gradient Descent for Structured Nonconvex Functions}
 \label{section3}
 \subsection{Previous research \& Motivation}
@@ -99,15 +104,71 @@ Furthermore, each paper in this report may have additional assumptions which wil
 \newpage
 \section{Stochastic Gradient Descent with Momentum}
 \label{section4}
-\subsection{Previous research \& Motivation}
-\subsection{Additional Assumptions}
+In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provided a novel convergence analysis for SGDM and Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.} SGDM without bounded gradient assumptions. This work also demonstrated that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption. 
+\subsection{Previous Research \& Motivation}
+Prior to this work, there had been some interests in investigating the convergence of SGDM. ~\cite{https://doi.org/10.48550/arxiv.1905.03817} provides a global convergence of SGDM but it assumes uniformly boundedness of gradients of the objection funcion. ~\cite{https://doi.org/10.48550/arxiv.1808.10396} presents a convergence bound of SGDM for general nonconvex functions but does not explain the competitiveness of SGDM compared to SGD. Moreover, the convergence rate of Multistage SGDM had not been established except for the classic SGD case. These issues related to SGDM and Multistage SGDM were addressed in this paper by Liu et al.
 \subsection{Main Result}
+The main results of this paper are the convergence bounds of SGDM and Multistage SGDM. In SGDM, let $\alpha$ and $\beta$ be learning rate and momentum weight, we have the following result:
+\begin{theorem} Assume $f$ satisfies General Assumptions, let $\alpha \leq \min\{\frac{1 - \beta}{L(4 - \beta + \beta^2)}, \frac{1 - \beta}{2\sqrt{2}L\sqrt{\beta + \beta^2}}\}$, then
+	\[
+	\frac{1}{k}\sum_{i = 1}^{k}\mathbb{E}[\|g_t\|^2] \leq \frac{2 (f(x_1) - f^*}{k\alpha} + (\frac{\beta + 3\beta^2}{2 (1 + \beta)} + 1)L\alpha\sigma^2 = \mathcal{O}(\frac{f(x_1) - f^*}{k\alpha} + L\alpha\sigma^2)
+	\]
+\end{theorem}
+\begin{theorem} Assume $f$ satisfies General Assumptions and is $\mu$-strongly convex, let $\alpha \leq \min\{\frac{1 - \beta}{5L}, \frac{1 - \beta}{L(3 - \beta + 2\beta^2 + \frac{48\sqrt{\beta}}{25}\frac{2L + 18\mu}{L})}\}$, then for all $t \geq t_0:= \lfloor\frac{\log 0.5}{\log \beta}\rfloor$, 
+	\[
+	\mathbb{E}[f(x_t) - f^*] = \mathcal{O}\bigl(\max\{1 - \alpha\mu, \beta\} + \frac{L}{\mu}\alpha\sigma^2\bigr)
+	\]
+\end{theorem}
+In a multistage setting, let $\alpha_i$, $\beta_i$ and $T_i$ are learning rate (step size), momentum weight and stage length of $i$th stage, respectively, we have the following result:
+\begin{theorem} Assume $f$ satisfies General Assumptions, restrict the parameters in each stage of Multistage SGDM so that 
+\begin{equation}
+\begin{split}
+\frac{\alpha_i\beta_i}{1 - \beta_i} &\equiv A_1 \ \ \ \ i = 1,...,n\\
+\alpha_iT_i &\equiv A_2 \ \ \ \ i = 1,...,n\\
+0 \leq \beta_1 &\leq \beta_2 \leq ... \leq \beta_n \leq 1
+\end{split}
+\end{equation}
+and $A_1, A_2$ are properly chosen constants. Let $A_1 = \frac{1}{24\sqrt{2}L}$ and $A_2$ be large enough so that $\beta_i^{2T_i} \leq \frac{1}{2}$ for $i = 1,...,n$. In addition, let
+\[
+\frac{1 - \beta_1}{\beta_1} \leq 12 \frac{1 - \beta_n}{\sqrt{\beta_n + \beta_n^2}}
+\] then we have
+\[
+\begin{split}
+\frac{1}{n}\sum_{l = 1}^{n}\frac{1}{T_l}\sum_{i = T_1 + ... + T_{l - 1} + 1}^{T_1 + .. + T_l}\mathbb{E}[\|g_t\|^2] &\leq \frac{2(f(x_1) - f^*)}{nA_2} + \frac{1}{n}\sum_{i = 1}^n\Bigl(24\beta^2_l\frac{\beta_1}{\sqrt{\beta_n + \beta_n^2}L + 3L}\Bigr)\alpha_l\sigma^2\\
+&= \mathcal{O}\Bigl(\frac{2(f(x_1) - f^*)}{nA_2} + \frac{1}{n}\sum_{i = 1}^nL\alpha_l\sigma^2\Bigr)
+\end{split}
+\]
+\end{theorem}
 \subsection{Key Approaches \& Insights}
+Recall that the core of SGDM algorithm is the following updating rule:
+\[
+v_t = \beta v_{t - 1} + (1 - \beta)\tilde{g}_t \ \ \ \
+x_{t + 1} = x_t - \alpha v_t
+\]
+Therefore, assume $v_0 = 0$, then $v_t$ can be expressed as 
+\begin{equation}
+v_t = (1 - \beta)\sum_{i = 1}^{t}\beta^{k - i}\tilde{g}_i
+\end{equation}
+One key observation on the role of $\beta$ in equation (2) from the paper is that $v_t$ enjoys a reduced variance of $(1 - \beta)\sigma^2$ while having a controllable deviation from the full gradient $g_t$ in expectation since $v_t$ is a moving average of the past stochastic gradients with lower weights on the older ones, thus it makes sense to look at the deterministic version of $v_t$ (replacing $\tilde{g}_i$ with $g_i$) and its deviation from the ideal descent direction $g_t$, which could be unbounded without further assumptions.
+
+While previous work assumed the boundedness of $g_t$ to circumvent above difficulty, this work constructed a novel Lyapunov function to handle this deviation:
+\begin{equation}
+L_t = (f(z_t) - f^*) + \sum_{i = 1}^{k - 1}c_i\|x^{k + 1 - i} - x^{k - i}\|^2
+\end{equation}
+where $z_t = \begin{cases}
+	x_t & t = 1 \\
+	\frac{1}{1 - \beta}x_t - \frac{\beta}{1 - \beta}x_{t - 1} & t \geq 2
+\end{cases}$\\
+\ \\
+The authors then argued that by carefully defining $\{c_i\}_i^\infty$ such that it is a positive sequence in a diminishing fashion, $L_t$ is indeed a Lyapunov function, thus one can show that $\mathbb{E}[L_{t + 1} - L_t] \leq -R_1E[\|g_t\|^2] + R_2$ for some positive constants $R_1 \geq \frac{\alpha}{2}$ and $R_2 = \mathcal{O}(L\alpha\sigma^2)$. By telescoping this inequality, the convergence of SGDM in Theorem 4.1 is then obtained, and similar techniques were utilized to derive the results in Theorem 4.2 under a strongly convex setting and in Theorem 4.3 for Multistage SGDM.
 \subsection{Discussion}
+Theorem 4.1 and Theorem 4.2 show that under both nonconvex and strongly convex settings, with a proper learning rate $\alpha$, SGDM can achieve the same convergence bound as the classical convergence bound of SGD (as shown in previous work, e.g., Theorem 4.5 and 4.8 in~\cite{https://doi.org/10.48550/arxiv.1606.04838}). This result only depends on General Assumptions, and the radius of the stationary distribution is smaller than the previous $\mathcal{O}(\frac{\alpha\sigma^2}{1 - \beta})$ result from~\cite{https://doi.org/10.48550/arxiv.1905.03817} that relies on the additional assumption of uniformly bounded gradients.
+
+For Multistage SGDM, Theorem 4.3 is the first theoretical result that guarantees its convergence. Moreover, it was demonstrated from the convergence bound that large learning rates are allowed in the first a few stages to accelerate the initial convergence, and smaller learning rates can refine the radius of the stationary distribution in the later stages, which is an advantage of stagewise training compared to plain SGDM.
 \newpage
 \section{AdaGrad}
 \label{section5}
-\subsection{Previous research \& Motivation}
+\subsection{Previous Research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Result}
 \subsection{Key Approaches \& Insights}
