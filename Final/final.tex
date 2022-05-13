@@ -56,7 +56,7 @@
 }
 
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{corollary}{Corollary}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 
 \begin{document}
@@ -68,7 +68,7 @@
 
 \section{Introduction}
 
-The primary goal of most deep learning models is to minimize the loss function.
+The primary goal of most deep learning models is to minimize the underlying loss function.
 Optimizers are crucial for the task of updating model weights such that the model will actually converge to a minimum in a computationally efficient manner instead of overshooting or moving away from the minimum. While existing optimizers are intuitively straightforward in convex learning, in non-convex settings they (notably for Adam-type adaptive gradient methods)
 often require the assumption on the boundedness of gradients for achieving convergence.
 
@@ -77,7 +77,7 @@ Polyak-Łojasiewicz conditions \cite{POLYAK1963864},  convergence rates of $O(1/
 
 While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. 
 
-In this report, we will survey and analyze results from five latest research papers on the convergence of optimization methods including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 5}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 6}), comparing and contrasting their approaches, methodologies, and findings as well as discussing their broader implications for the convergence problem and the general field of optimizers.
+In this report, we will survey and analyze results from four recent research papers on the convergence of stochastic optimization algorithms including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 5}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 6}), comparing and contrasting their approaches, methodologies, and findings as well as discussing their broader implications for the convergence problem and the general field of optimizers.
 \section{General Assumptions}
 In a stochastic setting, the optimization problem for a neural network training process can be written as a finite-sum problem:
 \[
@@ -93,12 +93,12 @@ Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ 
 	\item \textit{\textbf{Independence}: the random samples $s_j$'s are independent.}
 	\item \textit{\textbf{Bounded variance}: $Var_{s_t}(\tilde{g}_t) = \mathbb{E}_{s_t}[\tilde{g}_t - g_t] \leq \sigma^2$ for some $\sigma > 0$.}
 \end{enumerate}
-Throughout this report, we will refer the above as \textit{General Assumptions}. Furthermore, each paper in this report may have additional assumptions which will be included in their corresponding section. It is worth mentioning that none of these assumptions is related to the boundedness to gradient $g_t$, which is often the key assumption utilized by previous theoretical work, and was the first convergence guarantee for SGDM in a multistage setting.
+Throughout this report, we will refer to the above as \textit{General Assumptions} and use the above notations. Furthermore, each paper in this report may have additional assumptions which will be included in their corresponding section. It is worth mentioning that none of these assumptions is related to the boundedness to gradient $g_t$, which is often the key assumption utilized by previous theoretical work, and was the first convergence guarantee for SGDM in a multistage setting.
 \section{Stochastic Gradient Descent for Structured Nonconvex Functions}
 \label{section3}
 \subsection{Previous research \& Motivation}
 \subsection{Additional Assumptions}
-\subsection{Main Result}
+\subsection{Main Results}
 \subsection{Key Approaches \& Insights}
 \subsection{Discussion}
 \section{Stochastic Gradient Descent with Momentum}
@@ -106,20 +106,20 @@ Throughout this report, we will refer the above as \textit{General Assumptions}.
 In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provided a novel convergence analysis for SGDM and Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.} SGDM without bounded gradient assumptions. This work also demonstrated that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption. 
 \subsection{Previous Research \& Motivation}
 Prior to this work, there had been some interests in investigating the convergence of SGDM. ~\cite{https://doi.org/10.48550/arxiv.1905.03817} provides a global convergence of SGDM but it assumes uniformly boundedness of gradients of the objection funcion. ~\cite{https://doi.org/10.48550/arxiv.1808.10396} presents a convergence bound of SGDM for general nonconvex functions but does not explain the competitiveness of SGDM compared to SGD. Moreover, the convergence rate of Multistage SGDM had not been established except for the classic SGD case. These issues related to SGDM and Multistage SGDM were addressed in this paper by Liu et al.
-\subsection{Main Result}
+\subsection{Main Results}
 The main results of this paper are the convergence bounds of SGDM and Multistage SGDM. In SGDM, let $\alpha$ and $\beta$ be learning rate and momentum weight, we have the following result:
-\begin{theorem} Assume $f$ satisfies General Assumptions, let $\alpha \leq \min\{\frac{1 - \beta}{L(4 - \beta + \beta^2)}, \frac{1 - \beta}{2\sqrt{2}L\sqrt{\beta + \beta^2}}\}$, then
+\begin{theorem}[Non-convex SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, let $\alpha \leq \min\{\frac{1 - \beta}{L(4 - \beta + \beta^2)}, \frac{1 - \beta}{2\sqrt{2}L\sqrt{\beta + \beta^2}}\}$, then
 	\[
 	\frac{1}{k}\sum_{i = 1}^{k}\mathbb{E}[\|g_t\|^2] \leq \frac{2 (f(x_1) - f^*}{k\alpha} + (\frac{\beta + 3\beta^2}{2 (1 + \beta)} + 1)L\alpha\sigma^2 = \mathcal{O}(\frac{f(x_1) - f^*}{k\alpha} + L\alpha\sigma^2)
 	\]
 \end{theorem}
-\begin{theorem} Assume $f$ satisfies General Assumptions and is $\mu$-strongly convex, let $\alpha \leq \min\{\frac{1 - \beta}{5L}, \frac{1 - \beta}{L(3 - \beta + 2\beta^2 + \frac{48\sqrt{\beta}}{25}\frac{2L + 18\mu}{L})}\}$, then for all $t \geq t_0:= \lfloor\frac{\log 0.5}{\log \beta}\rfloor$, 
+\begin{theorem}[Strongly Convex SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions and is $\mu$-strongly convex, let $\alpha \leq \min\{\frac{1 - \beta}{5L}, \frac{1 - \beta}{L(3 - \beta + 2\beta^2 + \frac{48\sqrt{\beta}}{25}\frac{2L + 18\mu}{L})}\}$, then for all $t \geq t_0:= \lfloor\frac{\log 0.5}{\log \beta}\rfloor$, 
 	\[
 	\mathbb{E}[f(x_t) - f^*] = \mathcal{O}\bigl(\max\{1 - \alpha\mu, \beta\} + \frac{L}{\mu}\alpha\sigma^2\bigr)
 	\]
 \end{theorem}
 In a multistage setting, let $\alpha_i$, $\beta_i$ and $T_i$ are learning rate (step size), momentum weight and stage length of $i$th stage, respectively, we have the following result:
-\begin{theorem} Assume $f$ satisfies General Assumptions, restrict the parameters in each stage of Multistage SGDM so that 
+\begin{theorem}[Non-convex Multistage SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, restrict the parameters in each stage of Multistage SGDM so that 
 \begin{equation}
 \begin{split}
 \frac{\alpha_i\beta_i}{1 - \beta_i} &\equiv A_1 \ \ \ \ i = 1,...,n\\
@@ -158,7 +158,7 @@ where $z_t = \begin{cases}
 	x_t & t = 1 \\
 	\frac{1}{1 - \beta}x_t - \frac{\beta}{1 - \beta}x_{t - 1} & t \geq 2
 \end{cases}$\\
-\ \\
+
 The authors then argued that by carefully defining $\{c_i\}_i^\infty$ such that it is a positive sequence in a diminishing fashion, $L_t$ is indeed a Lyapunov function, thus one can show that $\mathbb{E}[L_{t + 1} - L_t] \leq -R_1E[\|g_t\|^2] + R_2$ for some positive constants $R_1 \geq \frac{\alpha}{2}$ and $R_2 = \mathcal{O}(L\alpha\sigma^2)$. By telescoping this inequality, the convergence of SGDM in Theorem 4.1 is then obtained, and similar techniques were utilized to derive the results in Theorem 4.2 under a strongly convex setting and in Theorem 4.3 for Multistage SGDM.
 \subsection{Discussion}
 Theorem 4.1 and Theorem 4.2 show that under both nonconvex and strongly convex settings, with a proper learning rate $\alpha$, SGDM can achieve the same convergence bound as the classical convergence bound of SGD (as shown in previous work, e.g., Theorem 4.5 and 4.8 in~\cite{https://doi.org/10.48550/arxiv.1606.04838}). This result only depends on General Assumptions, and the radius of the stationary distribution is smaller than the previous $\mathcal{O}(\frac{\alpha\sigma^2}{1 - \beta})$ result from~\cite{https://doi.org/10.48550/arxiv.1905.03817} that relies on the additional assumption of uniformly bounded gradients. It is also worth mentioning that the use of Lyapunov function is a novel approach for convergence analysis of optimization algorithms and provides some new insights throughout this paper. 
@@ -168,21 +168,58 @@ For Multistage SGDM, Theorem 4.3 is the first theoretical result that guarantees
 However, the convergence analysis in this paper does have some weaknesses and limitations: First of all, although it is theoretically shown that SGDM is "at least as fast as" SGD, this paper did not explore the advantages of SGDM compared to SGD in detail. In addition, Theorem 4.2 assumes a lower-bound of timestamp/iteration for the result to be valid, and this lower-bound could be a problem for some choices of $\beta$ (e.g, when $\beta = 0.995$, $t_0 = 138$). Finally, equation (1) from Theorem 4.3 puts a strong restriction on the choice of learning rates and momentum weights at all stages, which makes this stage-wise training setup impractical.
 \section{RMSProp}
 \label{section6}
+\setcounter{equation}{0}
+In~\cite{tieleman2012lecture}, Shi et al. discovered that the convergence of RMSProp algorithm is contingent to the choice of the moving average parameter. They proved that RMSProp converges to stationary points for certain problems and to bounded region of the others, which was the first result of convergence of this algorithm with no assumption about the boundedness of the gradient norm.
 \subsection{Previous research \& Motivation}
+Prior to this work, there has been one line of research on the convergence of variants of Adam (which includes RMSProp) with additional assumptions.~\cite{https://doi.org/10.48550/arxiv.2003.02395} provided a clean convergence result but assumed a large $\epsilon$ compared to  weighted moving average of the squared gradient, which is in contrary to the spirit of RMSProp.~\cite{https://doi.org/10.48550/arxiv.1807.06766} analyzed deterministic and stochastic RMSprop, but their results were based on an rather unrealistic assumption that all stochastic gradients have the same sign. Furthermore, all the above mentioned works assume the gradients to be bounded.
+
+Besides the aforementioned issues of previous works, Shi et al. run simulation for one counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}  and found that there is always a threshold of the moving average parameter above which RMSProp converges. This motivated them to investigate the relationship between this parameter and the performance of the algorithm.
+
 \subsection{Additional Assumptions}
-\subsection{Main Result}
+In addition to \textit{General Assumptions}, this paper assumes for stochastic RMSProp that 
+\begin{equation}
+\label{eq51}
+\sum_{j = 0}^{n - 1} \|\nabla f_j(x)\|_2^2 \leq D_1 \|\nabla f(x)\|_2^2 + D_0
+\end{equation}
+for some non-negative constant $D_0$ and $D_1$. This can be viewed as an augment to the bounded variance assumption.
+\subsection{Main Results}
+The main results of this paper are the convergence of RMSProp under both deterministic and stochastic setting. Let $\alpha_t$  be the learning rate at time/iteration $t$ and $\beta$ be the moving average parameter of the squared gradients norm, we have the following results: 
+\begin{theorem}[Deterministic RMSProp]
+Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, then for deterministic RMSProp (i.e, full-batch with $n = 1$, $\epsilon = 0$) with a diminishing learning rate $\alpha_t = \frac{\alpha_1}{\sqrt{t}}$ and any $\beta \in (0, 1)$, we have
+\[
+\min_{t \in (1, T]} \|g_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{T}\Big)
+\]
+\end{theorem}
+where $T > 0$ is the total number of iterations.
+\begin{theorem}[Stochastic RMSProp - Bounded Region]
+	Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions and (\hyperref[eq51]{1}). In addition, assume $\beta$ satisfies
+	\[
+	\sqrt{\frac{10dn}{\beta^n}}dnD_1\Big((1 - \beta)\frac{\frac{4n^2}{\beta^n} - 1}{2} + (\frac{1}{\sqrt{\beta^n}}- 1)\Big)\leq \frac{\sqrt{2} - 1}{2\sqrt{2}}
+	\]
+	Then, for stochastic RMSProp with a diminishing learning rate $\alpha_t = \frac{\alpha_1}{\sqrt{t}}$, we have
+	\[
+	\min_{t \in (1, T]} \min\{\|\tilde{g}_t\|_1, \|\tilde{g}_t\|_2^2\sqrt{\frac{D_1d}{D_0}}\} \leq \mathcal{O}\Big(\frac{\log T}{\sqrt{T}}\Big) + \mathcal{O}\Big(C\sqrt{D_0}\Big), \ \ \ \forall \ T\geq 4
+	\]
+	where $C$ is a $\beta$-dependent constant that satisfies $\lim\limits_{\beta \rightarrow 1} C = 0$
+\end{theorem}
+\begin{corollary}[Stochastic RMSProp - Stationary Point]
+	Let all assumptions in Theorem 5.2 hold. In addition, assume $D_0 = 0$ in (\hyperref[eq51]{1}), then for stochastic RMSProp we have,
+\[
+\min_{t \in (1, T]} \|\tilde{g}_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{\sqrt{T}}\Big), \ \ \ \forall \ T \geq 4
+\]
+\end{corollary}
 \subsection{Key Approaches \& Insights}
 \subsection{Discussion}
+\newpage
 \section{Adam}
 \label{section7}
 \subsection{Previous research \& Motivation}
 \subsection{Additional Assumptions}
-\subsection{Main Result}
+\subsection{Main Results}
 \subsection{Key Approaches \& Insights}
 \subsection{Discussion}
-\section{Addition Dicussion \& Comments}
+\section{Addition Discussion \& Comments}
 \section{Future Research}
-\newpage
 \bibliography{final}
 
 %\appendix
