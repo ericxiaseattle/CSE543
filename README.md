@@ -6,4 +6,4 @@ We plan to work on the convergence problem of optimizers without the bounded gra
 2. [SGDM](https://arxiv.org/pdf/2007.07989.pdf)
 3. [SGD for Structured Nonconvex Functions](http://proceedings.mlr.press/v130/gower21a/gower21a.pdf)
 4. [Super-ADAM](https://proceedings.neurips.cc/paper/2021/file/4be5a36cbaca8ab9d2066debfe4e65c1-Paper.pdf)
-5. [AdaGrad-Norm](https://arxiv.org/pdf/2202.05791.pdf)
+5. [AdaGrad-Norm](https://arxiv.org/pdf/2202.05791.pdf) (removed due to space limit)
