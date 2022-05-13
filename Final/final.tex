@@ -93,17 +93,17 @@ Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ 
 	\item \textit{\textbf{Independence}: the random samples $s_j$'s are independent.}
 	\item \textit{\textbf{Bounded variance}: $Var_{s_t}(\tilde{g}_t) = \mathbb{E}_{s_t}[\tilde{g}_t - g_t] \leq \sigma^2$ for some $\sigma > 0$.}
 \end{enumerate}
-Throughout this report, we will refer to the above as \textit{General Assumptions} and use the above notations. Furthermore, each paper in this report may have additional assumptions which will be included in their corresponding section. It is worth mentioning that none of these assumptions is related to the boundedness to gradient $g_t$, which is often the key assumption utilized by previous theoretical work, and was the first convergence guarantee for SGDM in a multistage setting.
+\textbf{Throughout this report, we will refer to the above as \textit{General Assumptions} and use the above notations}. Furthermore, each paper in this report may have additional assumptions which will be included in their corresponding section. It is worth mentioning that none of these assumptions is related to the boundedness to gradient $g_t$ or $\tilde{g}_t$, which is often the key assumption utilized by previous theoretical work.
 \section{Stochastic Gradient Descent for Structured Nonconvex Functions}
 \label{section3}
-\subsection{Previous research \& Motivation}
+\subsection{Previous Research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Results}
 \subsection{Key Approaches \& Insights}
 \subsection{Discussion}
 \section{Stochastic Gradient Descent with Momentum}
 \label{section4}
-In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provided a novel convergence analysis for SGDM and Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.} SGDM without bounded gradient assumptions. This work also demonstrated that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption. 
+In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provided a novel convergence analysis for SGDM and Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.} SGDM without bounded gradient assumptions. This work also demonstrated that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption, and was the first convergence guarantee for SGDM in a multistage setting.
 \subsection{Previous Research \& Motivation}
 Prior to this work, there had been some interests in investigating the convergence of SGDM. ~\cite{https://doi.org/10.48550/arxiv.1905.03817} provides a global convergence of SGDM but it assumes uniformly boundedness of gradients of the objection funcion. ~\cite{https://doi.org/10.48550/arxiv.1808.10396} presents a convergence bound of SGDM for general nonconvex functions but does not explain the competitiveness of SGDM compared to SGD. Moreover, the convergence rate of Multistage SGDM had not been established except for the classic SGD case. These issues related to SGDM and Multistage SGDM were addressed in this paper by Liu et al.
 \subsection{Main Results}
@@ -169,8 +169,8 @@ However, the convergence analysis in this paper does have some weaknesses and li
 \section{RMSProp}
 \label{section6}
 \setcounter{equation}{0}
-In~\cite{tieleman2012lecture}, Shi et al. discovered that the convergence of RMSProp algorithm is contingent to the choice of the moving average parameter. They proved that RMSProp converges to stationary points for certain problems and to bounded region of the others, which was the first result of convergence of this algorithm with no assumption about the boundedness of the gradient norm.
-\subsection{Previous research \& Motivation}
+In~\cite{tieleman2012lecture}, Shi et al. discovered that the convergence of RMSProp algorithm is contingent to the choice of the moving average parameter. They proved that RMSProp converges to stationary points for certain types of problems and to bounded region for the others, which was the first result of convergence of this algorithm with no assumption about the boundedness of the gradient norm.
+\subsection{Previous Research \& Motivation}
 Prior to this work, there has been one line of research on the convergence of variants of Adam (which includes RMSProp) with additional assumptions.~\cite{https://doi.org/10.48550/arxiv.2003.02395} provided a clean convergence result but assumed a large $\epsilon$ compared to  weighted moving average of the squared gradient, which is in contrary to the spirit of RMSProp.~\cite{https://doi.org/10.48550/arxiv.1807.06766} analyzed deterministic and stochastic RMSprop, but their results were based on an rather unrealistic assumption that all stochastic gradients have the same sign. Furthermore, all the above mentioned works assume the gradients to be bounded.
 
 Besides the aforementioned issues of previous works, Shi et al. run simulation for one counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}  and found that there is always a threshold of the moving average parameter above which RMSProp converges. This motivated them to investigate the relationship between this parameter and the performance of the algorithm.
@@ -213,7 +213,7 @@ where $T > 0$ is the total number of iterations.
 \newpage
 \section{Adam}
 \label{section7}
-\subsection{Previous research \& Motivation}
+\subsection{Previous Research \& Motivation}
 \subsection{Additional Assumptions}
 \subsection{Main Results}
 \subsection{Key Approaches \& Insights}
