@@ -269,13 +269,15 @@ for some non-negative constant $D_0$ and $D_1$. This can be viewed as an augment
 \subsection{Main Results \& Methodology}
 The main results of this paper are the convergence of RMSProp under both deterministic and stochastic setting. Let $\alpha_t$  be the learning rate at time/iteration $t$ and $\beta$ be the moving average parameter of the squared gradients norm, we have the following results: 
 \begin{theorem}[Deterministic RMSProp]
+	\label{theom51}
 Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, then for deterministic RMSProp (i.e, full-batch with $n = 1$, $\epsilon = 0$) with a diminishing learning rate $\alpha_t = \frac{\alpha_1}{\sqrt{t}}$ and any $\beta \in (0, 1)$, we have
 \[
-\min_{t \in (1, T]} \|g_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{T}\Big)
+\min_{t \in (1, T]} \|g_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{\sqrt{T}}\Big)
 \]
 \end{theorem}
 where $T > 0$ is the total number of iterations.
 \begin{theorem}[Stochastic RMSProp - Bounded Region]
+	\label{theom52}
 	Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions and (\hyperref[eq51]{1}). In addition, assume $\beta$ satisfies
 	\[
 	\sqrt{\frac{10dn}{\beta^n}}dnD_1\Big((1 - \beta)\frac{\frac{4n^2}{\beta^n} - 1}{2} + (\frac{1}{\sqrt{\beta^n}}- 1)\Big)\leq \frac{\sqrt{2} - 1}{2\sqrt{2}}
@@ -287,11 +289,40 @@ where $T > 0$ is the total number of iterations.
 	where $C$ is a $\beta$-dependent constant that satisfies $\lim\limits_{\beta \rightarrow 1} C = 0$
 \end{theorem}
 \begin{corollary}[Stochastic RMSProp - Stationary Point]
+	\label{coro51}
 	Let all assumptions in Theorem 5.2 hold. In addition, assume $D_0 = 0$ in (\hyperref[eq51]{1}), then for stochastic RMSProp we have,
 \[
 \min_{t \in (1, T]} \|\tilde{g}_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{\sqrt{T}}\Big), \ \ \ \forall \ T \geq 4
 \]
 \end{corollary}
+Next, we explain the methodology used to derive the above results. Recall that the core of the RMSProp algorithm is the following updating rule:
+\[
+v_t = \beta v_{t - 1} + (1 - \beta)(g_t \circ g_t)\ \  \ \ \ x_t = x_{t - 1} - \alpha(v_t + \epsilon I)^{-1/2}g_t
+\] 
+For the full-batch version of RMSProp, \hyperref[theom51]{Theorem 5.1} is an extension of results from the original Adam paper~\cite{Gower2021StochasticQM} for which the authors utilized the Lipschitz continuity of the gradients to remove the bounded assumption.\\
+\newline
+The derivation to the results for stochastic RMSProp is more complicated: Based on the observation from the simulation, the authors divided stochastic optimization problems into two classes: \textit{realizable} problems when $D_0 = 0$ from equation (\hyperref[eq51]{1}) and  \textit{non-realizable} problems when $D_0 \neq 0$. They further conjectured that these two classes of problems correspond to different convergence behavior of RMSProp contingent to the choice of beta, which is summarized in Table \hyperref[tb1]{1}:
+\begin{table}[h]
+\label{tb1}
+\centering
+\begin{tabular}{c|c | c}
+	\hline
+	Class & $\beta$ close to 1 & $\beta$ close to 0\\
+	\hline
+	Non-realizable & Convergence to bounded region (\hyperref[theom51]{Theorem 5.2}) & Divergence\\
+	Realizable & Convergence to stationary points (\hyperref[coro51]{Corollary 5.1}) & Divergence\\
+	\hline
+\end{tabular}
+\vspace{3pt}
+\caption{Conjecture on convergence outcomes of RMSProp on classes of optimization problems.}
+\end{table}
+\ \\
+The rationale to prove this conjecture is to track the magnitude of squared gradient terms and calculate the diminishing speed of $\|g\|_1$. Since $f$ is $L$-Lipschitz, by descent lemma, one can show the following inequality
+\begin{equation}
+\label{eq52}
+f(x_{t + 1}) - f(x_{t}) \leq \langle g_t, x_{t + 1} - x_{t}\rangle + \frac{L}{2}\|x_{t + 1} - x_{t}\|^2
+\end{equation}
+By examining the distribution of gradient norms among different sampled batches, one can find upper and lower bounds of the inner product between the gradient and difference in iterations of $x_t$ and those of $v_t$, which are conditioned on the choice of $\beta$. Moreover, these bounds directly contribute to bounding the first and second term in inequality  (\hyperref[eq52]{2}). Therefore, summing up the inequalities from $t_{init} = 4$ to $T$ gives the results in \hyperref[theom51]{Theorem 5.2}, and \hyperref[coro51]{Corollary 5.1} is a special case for when $D_0 = 0$.
 \subsection{Discussion}
 \newpage
 \section{Adam}
