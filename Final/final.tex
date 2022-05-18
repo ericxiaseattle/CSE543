@@ -58,6 +58,7 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[section]
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}[section]
 
 \begin{document}
 
@@ -73,7 +74,7 @@ Optimizers are crucial for the task of updating model weights such that the mode
 often require the assumption on the boundedness of gradients for achieving convergence.
 
 For example, for an objective function  $f(x)$ satisfying
-Polyak-Łojasiewicz conditions \cite{POLYAK1963864},  convergence rates of $O(1/T)$ were established for Stochastic Gradient Descent (SGD) under the assumption that $\mathbb{E}[||\nabla f_i(x_k)||^2] \leq C^2$ for all $x_k$ and some $C$, where $f_i$ typically represents the fit on an individual training sample \cite{DBLP:journals/corr/KarimiNS16}.
+Polyak-Łojasiewicz conditions~\cite{POLYAK1963864},  convergence rates of $O(1/T)$ were established for Stochastic Gradient Descent (SGD) under the assumption that $\mathbb{E}[||\nabla f_i(x_k)||^2] \leq C^2$ for all $x_k$ and some $C$, where $f_i$ typically represents the fit on an individual training sample \cite{DBLP:journals/corr/KarimiNS16}.
 
 While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. 
 
@@ -97,25 +98,105 @@ Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ 
 \section{Stochastic Gradient Descent for Structured Nonconvex Functions}
 \label{section3}
 \subsection{Previous Research \& Motivation}
+
+Prior to ~\cite{https://doi.org/10.48550/arxiv.2006.10311}, standard convergence theory for SGD in smooth non-convex settings gave a slow sublinear convergence to a stationary point. There has recently been a great interest
+in exploiting additional structure of classes of nonconvex function, such as error bound properties~\cite{Fabian2010ErrorBN},
+quasi (strong) convexity~\cite{https://doi.org/10.48550/arxiv.1906.11985, JMLR:v19:16-465, https://doi.org/10.48550/arxiv.1710.00797}, and quadratic growth condition~\cite{doi:10.1137/S1052623499359178}.
+
+In~\cite{https://doi.org/10.48550/arxiv.2006.10311}, Gower et al. provide a new general analsysis of SGD focusing on the two weakest of these properties, quasar (strongly) convex (QC) functions and functions satisfying the
+Polyak-Łojasiewicz (PL) conditions~\cite{POLYAK1963864}, using the expected residual (ER) condition~\cite{Gower2021StochasticQM}.
+
 \subsection{Additional Assumptions}
-\subsection{Main Results}
-\subsection{Key Approaches \& Insights}
+
+On top of \textit{General Assumptions}, the paper makes the mild assumption that the \textit{gradient noise} $\sigma^2$ is finite:
+
+\begin{equation}
+	\sigma^2 \coloneqq \sup_{x^*\in\mathcal{X^*}} \mathbb{E}\left[||g(x^*)||^2\right] < \infty.
+\end{equation}
+
+\subsection{Main Results \& Methodology}
+
+The main results of the paper are convergence bounds using the ER condition for SGD on QC functions and minibatch SGD on PL functions.
+
+\begin{definition}[Expected Residual]
+	We say $g\in\text{ER}(\rho)$ if
+
+	\[
+		\mathbb{E}\left[||g(x) - g(x^*) - (\nabla f(x) - \nabla f(x^*))||^2\right] \leq 2\rho (f(x) - f(x^*)), \ \ \forall x\in\mathbb{R}^d.
+	\]
+\end{definition}
+
+\begin{theorem}[QC Functions with Constant and Decreasing Step-sizes]
+	Assume \textit{General Assumptions}, $f(x)$ is $\zeta$-QC with respect to $x^*$, and $g\in\text{ER}(\rho)$. Let $0 < \gamma_k < \frac{\zeta}{2\rho + L}$ for all $k\in\mathbb{N}$ and let $r_0\coloneqq ||x^0 - x^*||^2$.
+	Then iterates of SGD satisfy
+
+	\[
+		\substack{\min \\ t=0,\dots, k-1}\mathbb{E}\left[f(x^t) - f(x^*)\right] \leq \frac{1}{\sum_{i=0}^{k-1}}\gamma_i (\zeta - \gamma_i (2\rho + L)) \left[\frac{r^0}{2} + \sigma^2 \sum^{k-1}_{t=0}\gamma_t^2\right].
+	\]
+
+	Furthermore, for $\gamma < \frac{\zeta}{2\rho + L}$, we have that
+
+	\textbf{1}. If $\forall k\in\mathbb{N}$, $\gamma_k = \gamma \equiv \frac{1}{2}\frac{\zeta}{(2\rho + L)}$ then $\forall k\in\mathbb{N}$,
+
+	\[
+		\substack{\min \\ t=0,\dots, k-1}\mathbb{E}[f(x^t) - f(x^*)]\leq 2r_0 \frac{2\rho + L}{\zeta^2 k} + \frac{\sigma^2}{2\rho + L}.
+	\]
+
+	\textbf{2}. Suppose SGD is run for $T$ iterations. If $\gamma_k = \frac{\gamma}{\sqrt{T}}$ for all $k$ from 0 to $T-1$, then
+
+	\[
+		\substack{\min \\ t=0,\dots, T-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{r_0 + 2\gamma^2 \sigma^2}{\gamma\sqrt{T}}.
+	\]
+
+	\textbf{3}. If $\forall k\in\mathbb{N},\ \gamma_k = \frac{\gamma}{\sqrt{k+1}}$ then $\forall k \in\mathbb{N}$,
+
+	\[
+		\substack{\min \\ t=0,\dots, k-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{1}{4\gamma} \frac{r_0 + 2\gamma^2 \sigma^2 (\log{(k)} + 1)}{\zeta (\sqrt{k} - 1) - \gamma(\rho + L/2)(\log{(k)} + 1)},
+	\]
+
+	which converges at a rate $\mathcal{O}\left(\frac{\log(k)}{\sqrt{k}}\right)$.
+\end{theorem}
+
+\begin{theorem}[PL Functions with Constant Step-sizes]
+	Assume \textit{General Assumptions}, $f\in\text{PL}(\mu)$, and $g\in\text{ER}(\rho)$. Let $\gamma_k = \gamma\leq \frac{1}{1+2\rho/\mu}\frac{1}{L}$, for all $k$, then SGD converges as follows:
+
+	\[
+		\mathbb{E}[f(x^k) - f^*] \leq (1-\gamma\mu)^k[f(x^0) - f^*] + \frac{L\gamma\sigma^2}{\mu}.
+	\]
+
+	Thus, given $\epsilon > 0$ and using step size $\gamma = \frac{1}{L}\min\{\frac{\mu\epsilon}{2\sigma^2}, \frac{1}{1+2\rho/\mu}\}$ we have that
+
+	\[
+		k\geq \frac{L}{\mu}\max\{\frac{2\sigma^2}{\mu\epsilon}, 1+\frac{2\rho}{\mu}\}\log\left(\frac{2(f(x^0) - f^*)}{\epsilon}\right) \implies \mathbb{E}[f(x^k) - f^*]\leq \epsilon.
+	\]
+
+	When the function interpolates the data, SGD converges to the solution at a linear rate.
+\end{theorem}
+
 \subsection{Discussion}
 \section{Stochastic Gradient Descent with Momentum}
 \label{section4}
-In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provided a novel convergence analysis for SGDM and Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.} SGDM without bounded gradient assumptions. This work also demonstrated that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption, and was the first convergence guarantee for SGDM in a multistage setting.
 \subsection{Previous Research \& Motivation}
-Prior to this work, there had been some interests in investigating the convergence of SGDM. ~\cite{https://doi.org/10.48550/arxiv.1905.03817} provides a global convergence of SGDM but it assumes uniformly boundedness of gradients of the objection funcion. ~\cite{https://doi.org/10.48550/arxiv.1808.10396} presents a convergence bound of SGDM for general nonconvex functions but does not explain the competitiveness of SGDM compared to SGD. Moreover, the convergence rate of Multistage SGDM had not been established except for the classic SGD case. These issues related to SGDM and Multistage SGDM were addressed in this paper by Liu et al.
+Prior to this work, there had been some interests in investigating the convergence of SGDM.
+~\cite{https://doi.org/10.48550/arxiv.1905.03817} provides a global convergence of SGDM but it assumes uniformly boundedness of gradients of the objection funcion.
+~\cite{https://doi.org/10.48550/arxiv.1808.10396} presents a convergence bound of SGDM for general nonconvex functions but does not explain the competitiveness of SGDM compared to SGD.
+Moreover, the convergence rate of Multistage SGDM had not been established except for the classic SGD case.
+
+In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provide a novel convergence analysis for SGDM and
+Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.}
+SGDM without bounded gradient assumptions. This work also demonstrates that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption,
+and is the first convergence guarantee for SGDM in a multistage setting.
+
 \subsection{Main Results}
 The main results of this paper are the convergence bounds of SGDM and Multistage SGDM. In SGDM, let $\alpha$ and $\beta$ be learning rate and momentum weight, we have the following result:
 \begin{theorem}[Non-convex SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, let $\alpha \leq \min\{\frac{1 - \beta}{L(4 - \beta + \beta^2)}, \frac{1 - \beta}{2\sqrt{2}L\sqrt{\beta + \beta^2}}\}$, then
 	\[
-	\frac{1}{k}\sum_{i = 1}^{k}\mathbb{E}[\|g_t\|^2] \leq \frac{2 (f(x_1) - f^*}{k\alpha} + (\frac{\beta + 3\beta^2}{2 (1 + \beta)} + 1)L\alpha\sigma^2 = \mathcal{O}(\frac{f(x_1) - f^*}{k\alpha} + L\alpha\sigma^2)
+		\frac{1}{k}\sum_{i = 1}^{k}\mathbb{E}[\|g_t\|^2] \leq \frac{2 (f(x_1) - f^*}{k\alpha} + (\frac{\beta + 3\beta^2}{2 (1 + \beta)} + 1)L\alpha\sigma^2 = \mathcal{O}(\frac{f(x_1) - f^*}{k\alpha} + L\alpha\sigma^2)
 	\]
 \end{theorem}
 \begin{theorem}[Strongly Convex SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions and is $\mu$-strongly convex, let $\alpha \leq \min\{\frac{1 - \beta}{5L}, \frac{1 - \beta}{L(3 - \beta + 2\beta^2 + \frac{48\sqrt{\beta}}{25}\frac{2L + 18\mu}{L})}\}$, then for all $t \geq t_0:= \lfloor\frac{\log 0.5}{\log \beta}\rfloor$, 
 	\[
-	\mathbb{E}[f(x_t) - f^*] = \mathcal{O}\bigl(\max\{1 - \alpha\mu, \beta\} + \frac{L}{\mu}\alpha\sigma^2\bigr)
+		\mathbb{E}[f(x_t) - f^*] = \mathcal{O}\bigl(\max\{1 - \alpha\mu, \beta\} + \frac{L}{\mu}\alpha\sigma^2\bigr)
 	\]
 \end{theorem}
 In a multistage setting, let $\alpha_i$, $\beta_i$ and $T_i$ are learning rate (step size), momentum weight and stage length of $i$th stage, respectively, we have the following result:
@@ -169,11 +250,13 @@ However, the convergence analysis in this paper does have some weaknesses and li
 \section{RMSProp}
 \label{section6}
 \setcounter{equation}{0}
-In~\cite{tieleman2012lecture}, Shi et al. discovered that the convergence of RMSProp algorithm is contingent to the choice of the moving average parameter. They proved that RMSProp converges to stationary points for certain types of problems and to bounded region for the others, which was the first result of convergence of this algorithm with no assumption about the boundedness of the gradient norm.
 \subsection{Previous Research \& Motivation}
 Prior to this work, there has been one line of research on the convergence of variants of Adam (which includes RMSProp) with additional assumptions.~\cite{https://doi.org/10.48550/arxiv.2003.02395} provided a clean convergence result but assumed a large $\epsilon$ compared to  weighted moving average of the squared gradient, which is in contrary to the spirit of RMSProp.~\cite{https://doi.org/10.48550/arxiv.1807.06766} analyzed deterministic and stochastic RMSprop, but their results were based on an rather unrealistic assumption that all stochastic gradients have the same sign. Furthermore, all the above mentioned works assume the gradients to be bounded.
 
-Besides the aforementioned issues of previous works, Shi et al. run simulation for one counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}  and found that there is always a threshold of the moving average parameter above which RMSProp converges. This motivated them to investigate the relationship between this parameter and the performance of the algorithm.
+Shi et al. ran simulations for one counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}  and found that there is always a threshold of the moving average parameter above which
+RMSProp converges, thus motivating them to investigate the relationship between this parameter and the performance of the algorithm. They discovered ~\cite{tieleman2012lecture} that the convergence of RMSProp algorithm is
+contingent to the choice of the moving average parameter. They proved that RMSProp converges to stationary points for certain types of problems and to bounded region for the others, which was the first result of convergence
+of this algorithm with no assumption about the boundedness of the gradient norm.
 
 \subsection{Additional Assumptions}
 In addition to \textit{General Assumptions}, this paper assumes for stochastic RMSProp that 
@@ -220,6 +303,7 @@ where $T > 0$ is the total number of iterations.
 \subsection{Discussion}
 \section{Addition Discussion \& Comments}
 \section{Future Research}
+\pagebreak
 \bibliography{final}
 
 %\appendix
