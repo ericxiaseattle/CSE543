@@ -41,8 +41,9 @@
 % \AND instead of \And before the third author name.
 
 \author{%
-  Roger Wang, \ Eric Xia \\
-  \texttt{rogerwyf@uw.edu, ericxia@uw.edu} \\
+  Roger Wang \ \ \ \  Eric Xia \\
+  University of Washington\\
+  \texttt{\{rogerwyf, ericxia\}@uw.edu} 
 }
 \usepackage{enumitem}
 \usepackage{mathtools}
@@ -50,7 +51,7 @@
 \usepackage{xcolor}
 \hypersetup{
 	colorlinks,
-	linkcolor={red!50!black},
+	linkcolor={black!50!black},
 	citecolor={blue!50!black},
 	urlcolor={blue!80!black}
 }
@@ -72,9 +73,6 @@
 The primary goal of most deep learning models is to minimize the underlying loss function.
 Optimizers are crucial for the task of updating model weights such that the model will actually converge to a minimum in a computationally efficient manner instead of overshooting or moving away from the minimum. While existing optimizers are intuitively straightforward in convex learning, in non-convex settings they (notably for Adam-type adaptive gradient methods)
 often require the assumption on the boundedness of gradients for achieving convergence.
-
-For example, for an objective function  $f(x)$ satisfying
-Polyak-Łojasiewicz conditions~\cite{POLYAK1963864},  convergence rates of $O(1/T)$ were established for Stochastic Gradient Descent (SGD) under the assumption that $\mathbb{E}[||\nabla f_i(x_k)||^2] \leq C^2$ for all $x_k$ and some $C$, where $f_i$ typically represents the fit on an individual training sample \cite{DBLP:journals/corr/KarimiNS16}.
 
 While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. 
 
@@ -99,7 +97,7 @@ Let $g_t\coloneqq\nabla f(x_t)$ and $\tilde{g}_t \coloneqq  \nabla f(x_t, s_t)$ 
 \label{section3}
 \subsection{Previous Research \& Motivation}
 
-Prior to ~\cite{https://doi.org/10.48550/arxiv.2006.10311}, standard convergence theory for SGD in smooth non-convex settings gave a slow sublinear convergence to a stationary point. There has recently been a great interest
+Prior to~\cite{https://doi.org/10.48550/arxiv.2006.10311}, standard convergence theory for SGD in smooth non-convex settings gave a slow sublinear convergence to a stationary point. There has recently been a great interest
 in exploiting additional structure of classes of nonconvex function, such as error bound properties~\cite{Fabian2010ErrorBN},
 quasi (strong) convexity~\cite{https://doi.org/10.48550/arxiv.1906.11985, JMLR:v19:16-465, https://doi.org/10.48550/arxiv.1710.00797}, and quadratic growth condition~\cite{doi:10.1137/S1052623499359178}.
 
@@ -177,31 +175,34 @@ The main results of the paper are convergence bounds using the ER condition for 
 \section{Stochastic Gradient Descent with Momentum}
 \label{section4}
 \subsection{Previous Research \& Motivation}
-Prior to this work, there had been some interests in investigating the convergence of SGDM.
-~\cite{https://doi.org/10.48550/arxiv.1905.03817} provides a global convergence of SGDM but it assumes uniformly boundedness of gradients of the objection funcion.
-~\cite{https://doi.org/10.48550/arxiv.1808.10396} presents a convergence bound of SGDM for general nonconvex functions but does not explain the competitiveness of SGDM compared to SGD.
+\setcounter{equation}{0}
+Prior to~\cite{NEURIPS2020_d3f5d4de} by Liu et al., there had been some interests in investigating the convergence of SGDM.~\cite{https://doi.org/10.48550/arxiv.1905.03817} provides a global convergence of SGDM but it assumes uniformly boundedness of gradients of the objection funcion.~\cite{https://doi.org/10.48550/arxiv.1808.10396} presents a convergence bound of SGDM for general nonconvex functions but does not explain the competitiveness of SGDM compared to SGD.
 Moreover, the convergence rate of Multistage SGDM had not been established except for the classic SGD case.
 
-In~\cite{NEURIPS2020_d3f5d4de}, Liu et al. provide a novel convergence analysis for SGDM and
+In this work, Liu et al. provide a novel convergence analysis for SGDM and
 Multistage\footnote{Multistage refers to applying a constant stepsize which is then dropped by a constant factor to encourage fine-tuning of training, and the momentum weight is either kept unchanged or gradually increased.}
 SGDM without bounded gradient assumptions. This work also demonstrates that SGDM has the same convergence bound as SGD for both strongly convex and nonconvex functions without uniformly bounded gradient assumption,
 and is the first convergence guarantee for SGDM in a multistage setting.
 
-\subsection{Main Results}
+\subsection{Main Results \& Methodology}
 The main results of this paper are the convergence bounds of SGDM and Multistage SGDM. In SGDM, let $\alpha$ and $\beta$ be learning rate and momentum weight, we have the following result:
-\begin{theorem}[Non-convex SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, let $\alpha \leq \min\{\frac{1 - \beta}{L(4 - \beta + \beta^2)}, \frac{1 - \beta}{2\sqrt{2}L\sqrt{\beta + \beta^2}}\}$, then
+\begin{theorem}[Non-convex SGDM]
+	\label{theom41} Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, let $\alpha \leq \min\{\frac{1 - \beta}{L(4 - \beta + \beta^2)}, \frac{1 - \beta}{2\sqrt{2}L\sqrt{\beta + \beta^2}}\}$, then
 	\[
 		\frac{1}{k}\sum_{i = 1}^{k}\mathbb{E}[\|g_t\|^2] \leq \frac{2 (f(x_1) - f^*}{k\alpha} + (\frac{\beta + 3\beta^2}{2 (1 + \beta)} + 1)L\alpha\sigma^2 = \mathcal{O}(\frac{f(x_1) - f^*}{k\alpha} + L\alpha\sigma^2)
 	\]
 \end{theorem}
-\begin{theorem}[Strongly Convex SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions and is $\mu$-strongly convex, let $\alpha \leq \min\{\frac{1 - \beta}{5L}, \frac{1 - \beta}{L(3 - \beta + 2\beta^2 + \frac{48\sqrt{\beta}}{25}\frac{2L + 18\mu}{L})}\}$, then for all $t \geq t_0:= \lfloor\frac{\log 0.5}{\log \beta}\rfloor$, 
+\begin{theorem}[Strongly Convex SGDM]
+	\label{theom42} Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions and is $\mu$-strongly convex, let $\alpha \leq \min\{\frac{1 - \beta}{5L}, \frac{1 - \beta}{L(3 - \beta + 2\beta^2 + \frac{48\sqrt{\beta}}{25}\frac{2L + 18\mu}{L})}\}$, then for all $t \geq t_0:= \lfloor\frac{\log 0.5}{\log \beta}\rfloor$, 
 	\[
 		\mathbb{E}[f(x_t) - f^*] = \mathcal{O}\bigl(\max\{1 - \alpha\mu, \beta\} + \frac{L}{\mu}\alpha\sigma^2\bigr)
 	\]
 \end{theorem}
 In a multistage setting, let $\alpha_i$, $\beta_i$ and $T_i$ are learning rate (step size), momentum weight and stage length of $i$th stage, respectively, we have the following result:
-\begin{theorem}[Non-convex Multistage SGDM] Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, restrict the parameters in each stage of Multistage SGDM so that 
+\begin{theorem}[Non-convex Multistage SGDM]
+	\label{theom43} Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, restrict the parameters in each stage of Multistage SGDM so that 
 \begin{equation}
+\label{eq41}
 \begin{split}
 \frac{\alpha_i\beta_i}{1 - \beta_i} &\equiv A_1 \ \ \ \ i = 1,...,n\\
 \alpha_iT_i &\equiv A_2 \ \ \ \ i = 1,...,n\\
@@ -219,53 +220,53 @@ and $A_1, A_2$ are properly chosen constants. Let $A_1 = \frac{1}{24\sqrt{2}L}$ 
 \end{split}
 \]
 \end{theorem}
-\subsection{Key Approaches \& Insights}
-Recall that the core of SGDM algorithm is the following updating rule:
+Next, we will summarize the key approaches used to derive the above results. Recall that the core of SGDM algorithm is the following updating rule:
 \[
 v_t = \beta v_{t - 1} + (1 - \beta)\tilde{g}_t \ \ \ \
 x_{t + 1} = x_t - \alpha v_t
 \]
 Therefore, assume $v_0 = 0$, then $v_t$ can be expressed as 
 \begin{equation}
+\label{eq42}
 v_t = (1 - \beta)\sum_{i = 1}^{t}\beta^{k - i}\tilde{g}_i
 \end{equation}
-One key observation on the role of $\beta$ in equation (2) from the paper is that $v_t$ enjoys a reduced variance of $(1 - \beta)\sigma^2$ while having a controllable deviation from the full gradient $g_t$ in expectation since $v_t$ is a moving average of the past stochastic gradients with lower weights on the older ones, thus it makes sense to look at the deterministic version of $v_t$ (replacing $\tilde{g}_i$ with $g_i$) and its deviation from the ideal descent direction $g_t$, which could be unbounded without further assumptions.
+One key observation on the role of $\beta$ in equation (\hyperref[eq42]{2}) from the paper is that $v_t$ enjoys a reduced variance of $(1 - \beta)\sigma^2$ while having a controllable deviation from the full gradient $g_t$ in expectation since $v_t$ is a moving average of the past stochastic gradients with lower weights on the older ones, thus it makes sense to look at the deterministic version of $v_t$ (replacing $\tilde{g}_i$ with $g_i$) and its deviation from the ideal descent direction $g_t$, which could be unbounded without further assumptions.
 
 While previous work assumed the boundedness of $g_t$ to circumvent above difficulty, this work constructed a novel Lyapunov function to handle this deviation:
-\begin{equation}
+\[
 L_t = (f(z_t) - f^*) + \sum_{i = 1}^{k - 1}c_i\|x^{k + 1 - i} - x^{k - i}\|^2
-\end{equation}
+\]
 where $z_t = \begin{cases}
 	x_t & t = 1 \\
 	\frac{1}{1 - \beta}x_t - \frac{\beta}{1 - \beta}x_{t - 1} & t \geq 2
 \end{cases}$\\
 
-The authors then argued that by carefully defining $\{c_i\}_i^\infty$ such that it is a positive sequence in a diminishing fashion, $L_t$ is indeed a Lyapunov function, thus one can show that $\mathbb{E}[L_{t + 1} - L_t] \leq -R_1E[\|g_t\|^2] + R_2$ for some positive constants $R_1 \geq \frac{\alpha}{2}$ and $R_2 = \mathcal{O}(L\alpha\sigma^2)$. By telescoping this inequality, the convergence of SGDM in Theorem 4.1 is then obtained, and similar techniques were utilized to derive the results in Theorem 4.2 under a strongly convex setting and in Theorem 4.3 for Multistage SGDM.
+The authors then argued that by carefully defining $\{c_i\}_i^\infty$ such that it is a positive sequence in a diminishing fashion, $L_t$ is indeed a Lyapunov function, thus one can show that $\mathbb{E}[L_{t + 1} - L_t] \leq -R_1E[\|g_t\|^2] + R_2$ for some positive constants $R_1 \geq \frac{\alpha}{2}$ and $R_2 = \mathcal{O}(L\alpha\sigma^2)$. By telescoping this inequality, the convergence of SGDM in \hyperref[theom41]{Theorem 4.1} is then obtained, and similar techniques were utilized to derive the results in \hyperref[theom42]{Theorem 4.2} under a strongly convex setting and in \hyperref[theom43]{Theorem 4.3} for Multistage SGDM.
 \subsection{Discussion}
-Theorem 4.1 and Theorem 4.2 show that under both nonconvex and strongly convex settings, with a proper learning rate $\alpha$, SGDM can achieve the same convergence bound as the classical convergence bound of SGD (as shown in previous work, e.g., Theorem 4.5 and 4.8 in~\cite{https://doi.org/10.48550/arxiv.1606.04838}). This result only depends on General Assumptions, and the radius of the stationary distribution is smaller than the previous $\mathcal{O}(\frac{\alpha\sigma^2}{1 - \beta})$ result from~\cite{https://doi.org/10.48550/arxiv.1905.03817} that relies on the additional assumption of uniformly bounded gradients. It is also worth mentioning that the use of Lyapunov function is a novel approach for convergence analysis of optimization algorithms and provides some new insights throughout this paper. 
+\hyperref[theom41]{Theorem 4.1} and \hyperref[theom42]{Theorem 4.2} show that under both nonconvex and strongly convex settings, with a proper learning rate $\alpha$, SGDM can achieve the same convergence bound as the classical convergence bound of SGD (as shown in previous work, e.g., Theorem 4.5 and 4.8 in~\cite{https://doi.org/10.48550/arxiv.1606.04838}). This result only depends on General Assumptions, and the radius of the stationary distribution is smaller than the previous $\mathcal{O}(\frac{\alpha\sigma^2}{1 - \beta})$ result from~\cite{https://doi.org/10.48550/arxiv.1905.03817} that relies on the additional assumption of uniformly bounded gradients. It is also worth mentioning that the use of Lyapunov function is a novel approach for convergence analysis of optimization algorithms and provides some new insights throughout this paper. 
 
-For Multistage SGDM, Theorem 4.3 is the first theoretical result that guarantees its convergence. Moreover, it was demonstrated from the convergence bound that large learning rates are allowed in the first a few stages to accelerate the initial convergence, and smaller learning rates can refine the radius of the stationary distribution in the later stages, which is an advantage of stagewise training compared to plain SGDM.
+For Multistage SGDM, \hyperref[theom42]{Theorem 4.3} is the first theoretical result that guarantees its convergence. Moreover, it was demonstrated from the convergence bound that large learning rates are allowed in the first a few stages to accelerate the initial convergence, and smaller learning rates can refine the radius of the stationary distribution in the later stages, which is an advantage of stagewise training compared to plain SGDM.
 
-However, the convergence analysis in this paper does have some weaknesses and limitations: First of all, although it is theoretically shown that SGDM is "at least as fast as" SGD, this paper did not explore the advantages of SGDM compared to SGD in detail. In addition, Theorem 4.2 assumes a lower-bound of timestamp/iteration for the result to be valid, and this lower-bound could be a problem for some choices of $\beta$ (e.g, when $\beta = 0.995$, $t_0 = 138$). Finally, equation (1) from Theorem 4.3 puts a strong restriction on the choice of learning rates and momentum weights at all stages, which makes this stage-wise training setup impractical.
+However, the convergence analysis in this paper does have some weaknesses and limitations: First of all, although it is theoretically shown that SGDM is "at least as fast as" SGD, this paper did not explore the advantages of SGDM compared to SGD in detail. In addition, \hyperref[theom42]{Theorem 4.2} assumes a lower-bound of timestamp/iteration for the result to be valid, and this lower-bound could be a problem for some choices of $\beta$ (e.g, when $\beta = 0.995$, $t_0 = 138$). Finally, equation (\hyperref[eq41]{1}) from \hyperref[theom43]{Theorem 4.3} puts a strong restriction on the choice of learning rates and momentum weights at all stages, which makes this stage-wise training setup impractical.
 \section{RMSProp}
 \label{section6}
 \setcounter{equation}{0}
 \subsection{Previous Research \& Motivation}
-Prior to this work, there has been one line of research on the convergence of variants of Adam (which includes RMSProp) with additional assumptions.~\cite{https://doi.org/10.48550/arxiv.2003.02395} provided a clean convergence result but assumed a large $\epsilon$ compared to  weighted moving average of the squared gradient, which is in contrary to the spirit of RMSProp.~\cite{https://doi.org/10.48550/arxiv.1807.06766} analyzed deterministic and stochastic RMSprop, but their results were based on an rather unrealistic assumption that all stochastic gradients have the same sign. Furthermore, all the above mentioned works assume the gradients to be bounded.
+Prior to~\cite{shi2021rmsprop} by Shi et al., there had been one line of research on the convergence of variants of Adam (which includes RMSProp) with additional assumptions.~\cite{https://doi.org/10.48550/arxiv.2003.02395} provides a clean convergence result but assumed a large $\epsilon$ compared to  weighted moving average of the squared gradient, which is in contrary to the spirit of RMSProp.~\cite{https://doi.org/10.48550/arxiv.1807.06766} analyzes deterministic and stochastic RMSprop, but their results were based on an rather unrealistic assumption that all stochastic gradients have the same sign. Furthermore, all the above mentioned works assume the gradients to be bounded.
 
-Shi et al. ran simulations for one counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}  and found that there is always a threshold of the moving average parameter above which
-RMSProp converges, thus motivating them to investigate the relationship between this parameter and the performance of the algorithm. They discovered ~\cite{tieleman2012lecture} that the convergence of RMSProp algorithm is
-contingent to the choice of the moving average parameter. They proved that RMSProp converges to stationary points for certain types of problems and to bounded region for the others, which was the first result of convergence
+During the review on one counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}, Shi et al. ran simulations and found that there is always a threshold of the moving average parameter above which
+RMSProp converges, thus motivating them to further investigate the relationship between this parameter and the performance of the algorithm. They discovered that the convergence of RMSProp algorithm is
+contingent to the choice of the moving average parameter. Moreover, they proved that RMSProp converges to stationary points for certain types of problems and to bounded region for the others, which was the first result of convergence
 of this algorithm with no assumption about the boundedness of the gradient norm.
 
 \subsection{Additional Assumptions}
-In addition to \textit{General Assumptions}, this paper assumes for stochastic RMSProp that 
+In addition to \textit{General Assumptions}, this paper assumes that for stochastic RMSProp, the objective satisfies
 \begin{equation}
 \label{eq51}
 \sum_{j = 0}^{n - 1} \|\nabla f_j(x)\|_2^2 \leq D_1 \|\nabla f(x)\|_2^2 + D_0
 \end{equation}
 for some non-negative constant $D_0$ and $D_1$. This can be viewed as an augment to the bounded variance assumption.
-\subsection{Main Results}
+\subsection{Main Results \& Methodology}
 The main results of this paper are the convergence of RMSProp under both deterministic and stochastic setting. Let $\alpha_t$  be the learning rate at time/iteration $t$ and $\beta$ be the moving average parameter of the squared gradients norm, we have the following results: 
 \begin{theorem}[Deterministic RMSProp]
 Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, then for deterministic RMSProp (i.e, full-batch with $n = 1$, $\epsilon = 0$) with a diminishing learning rate $\alpha_t = \frac{\alpha_1}{\sqrt{t}}$ and any $\beta \in (0, 1)$, we have
@@ -291,15 +292,13 @@ where $T > 0$ is the total number of iterations.
 \min_{t \in (1, T]} \|\tilde{g}_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{\sqrt{T}}\Big), \ \ \ \forall \ T \geq 4
 \]
 \end{corollary}
-\subsection{Key Approaches \& Insights}
 \subsection{Discussion}
 \newpage
 \section{Adam}
 \label{section7}
 \subsection{Previous Research \& Motivation}
 \subsection{Additional Assumptions}
-\subsection{Main Results}
-\subsection{Key Approaches \& Insights}
+\subsection{Main Results \& Methodology}
 \subsection{Discussion}
 \section{Addition Discussion \& Comments}
 \section{Future Research}
