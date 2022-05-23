@@ -26,7 +26,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
-
+\usepackage[labelfont=bf]{caption}
 \usepackage{graphicx}    % inserting images
 \bibliographystyle{unsrtnat}
 
@@ -254,8 +254,8 @@ However, the convergence analysis in this paper does have some weaknesses and li
 \subsection{Previous Research \& Motivation}
 Prior to~\cite{shi2021rmsprop} by Shi et al., there had been one line of research on the convergence of variants of Adam (which includes RMSProp) with additional assumptions.~\cite{https://doi.org/10.48550/arxiv.2003.02395} provides a clean convergence result but assumed a large $\epsilon$ compared to  weighted moving average of the squared gradient, which is in contrary to the spirit of RMSProp.~\cite{https://doi.org/10.48550/arxiv.1807.06766} analyzes deterministic and stochastic RMSprop, but their results were based on an rather unrealistic assumption that all stochastic gradients have the same sign. Furthermore, all the above mentioned works assume the gradients to be bounded.
 
-During the review on one counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}, Shi et al. ran simulations and found that there is always a threshold of the moving average parameter above which
-RMSProp converges, thus motivating them to further investigate the relationship between this parameter and the performance of the algorithm. They discovered that the convergence of RMSProp algorithm is
+During the review on one famous counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}, Shi et al. ran simulations and found that there is always a threshold of the moving average parameter above which
+RMSProp converges (See Figure \hyperref[fig1]{1} in Appendix). This observation motivated them to further investigate the relationship between this parameter and the performance of the algorithm. They discovered that the convergence of RMSProp algorithm is
 contingent to the choice of the moving average parameter. Moreover, they proved that RMSProp converges to stationary points for certain types of problems and to bounded region for the others, which was the first result of convergence
 of this algorithm with no assumption about the boundedness of the gradient norm.
 
@@ -324,7 +324,9 @@ f(x_{t + 1}) - f(x_{t}) \leq \langle g_t, x_{t + 1} - x_{t}\rangle + \frac{L}{2}
 \end{equation}
 By examining the distribution of gradient norms among different sampled batches, one can find upper and lower bounds of the inner product between the gradient and difference in iterations of $x_t$ and those of $v_t$, which are conditioned on the choice of $\beta$. Moreover, these bounds directly contribute to bounding the first and second term in inequality  (\hyperref[eq52]{2}). Therefore, summing up the inequalities from $t_{init} = 4$ to $T$ gives the results in \hyperref[theom51]{Theorem 5.2}, and \hyperref[coro51]{Corollary 5.1} is a special case for when $D_0 = 0$.
 \subsection{Discussion}
-\newpage
+\hyperref[theom51]{Theorem 5.2}, and \hyperref[coro51]{Corollary 5.1} provide the first convergence guarantee of RMSProp on non-convex stochastic optimization problems without bounded gradient assumptions. Unlike the previous related works, this paper not only suggests the classification of optimization problems into two kinds (realizable, non-realizable) to tackle them separately , but also proves the existence of a critical threshold of $\beta$ such that the algorithm will generate reasonably good results (convergence to stationary points/bounded region).
+
+More importantly, although in this report we have only focused on RMSProp, the extension of both theoretical and empirical results from this paper shows that the two parameters of Adam algorithm play different roles in contributing to the convergence of the algorithm and behave differently depending on the optimization problem. Specifically, the "problem-dependent" nature of $\beta$ clarifies the misconception that "Adam does not converge" from~\cite{https://doi.org/10.48550/arxiv.1904.09237}, and the authors are able to convey this idea throughout this paper in a convincing manner.
 \section{Adam}
 \label{section7}
 \subsection{Previous Research \& Motivation}
@@ -333,7 +335,7 @@ By examining the distribution of gradient norms among different sampled batches,
 \subsection{Discussion}
 \section{Addition Discussion \& Comments}
 \section{Future Research}
-\pagebreak
+\newpage
 \bibliography{final}
 
 %\appendix
@@ -341,5 +343,23 @@ By examining the distribution of gradient norms among different sampled batches,
 %
 %Optionally include extra information (complete proofs, additional experiments and plots) in the appendix.
 %This section will often be part of the supplemental material.
-
+\newpage
+\section*{Appendix}
+\begin{figure}[h]
+\label{fig1}
+\centering
+\includegraphics[scale = 0.5]{rmsp.png}
+\caption{Phase diagram of the outcome of RMSprop on the counter example with the definition
+			\(f_t(x) =
+	\begin{cases}
+		Cx & \ \ \text{for $t$ mod $C = 1$}\\
+		-x & \ \ \text{Otherwise}\\
+	\end{cases}
+	\). 
+	Different marks represent
+	different outcome: we label a data point as convergence if the distance between $x$ and $-1$ is smaller than 0.01
+	on average after 750000 iterations and as divergence otherwise. For each choice of $\beta$, there exists a counter
+	example, but for each counter example in which Adam diverges, there exists a larger $\beta$ that can make Adam
+	converge. Step size is set as $\alpha_t = \frac{1}{\sqrt{t}}$.}
+\end{figure}
 \end{document}
