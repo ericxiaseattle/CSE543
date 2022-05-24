@@ -76,7 +76,7 @@ often require the assumption on the boundedness of gradients for achieving conve
 
 While convenient, the imposition of assumptions on the boundedness of gradients can be difficult to verify in practical settings, hence in recent years there has been a trend in research efforts towards analyzing existing optimization methods and proposing novel methods without such assumptions. 
 
-In this report, we will survey and analyze results from four recent research papers on the convergence of stochastic optimization algorithms including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 5}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 6}), comparing and contrasting their approaches, methodologies, and findings as well as discussing their broader implications for the convergence problem and the general field of optimizers.
+In this report, we will review four recent research papers on the convergence of stochastic optimization algorithms including SGD (\hyperref[section3]{Section 3}), SGD with Momentum (\hyperref[section4]{Section 4}), Root Mean Squared Propagation (RMSProp) (\hyperref[section6]{Section 5}) and Adaptive Moment Estimation (Adam) (\hyperref[section7]{Section 6}), analyzing their approaches, methodologies, and findings as well as discussing their broader implications for the convergence problem and the general field of optimizers.
 \section{General Assumptions}
 In a stochastic setting, the optimization problem for a neural network training process can be written as a finite-sum problem:
 \[
@@ -313,10 +313,10 @@ The derivation to the results for stochastic RMSProp is more complicated: Based 
 	Realizable & Convergence to stationary points (\hyperref[coro51]{Corollary 5.1}) & Divergence\\
 	\hline
 \end{tabular}
-\vspace{3pt}
+\vspace{2pt}
 \caption{Conjecture on convergence outcomes of RMSProp on classes of optimization problems.}
 \end{table}
-\ \\
+\newline
 The rationale to prove this conjecture is to track the magnitude of squared gradient terms and calculate the diminishing speed of $\|g\|_1$. Since $f$ is $L$-Lipschitz, by descent lemma, one can show the following inequality
 \begin{equation}
 \label{eq52}
@@ -348,7 +348,7 @@ More importantly, although in this report we have only focused on RMSProp, the e
 \begin{figure}[h]
 \label{fig1}
 \centering
-\includegraphics[scale = 0.5]{rmsp.png}
+\includegraphics[scale = 0.4]{rmsp.png}
 \caption{Phase diagram of the outcome of RMSprop on the counter example with the definition
 			\(f_t(x) =
 	\begin{cases}
