@@ -106,11 +106,15 @@ Polyak-Łojasiewicz (PL) conditions~\cite{POLYAK1963864}, using the expected res
 
 \subsection{Additional Assumptions}
 
-On top of \textit{General Assumptions}, the paper makes the mild assumption that the \textit{gradient noise} $\sigma^2$ is finite:
+On top of \textit{General Assumptions}, the paper makes the mild assumption that the \textit{gradient noise} $\sigma^2$ is finite.
+It also assumes the interpolation condition, satisfied by many overparameterized deep NNs achieveing zero loss on training data:
 
-\begin{equation}
-	\sigma^2 \coloneqq \sup_{x^*\in\mathcal{X^*}} \mathbb{E}\left[||g(x^*)||^2\right] < \infty.
-\end{equation}
+\begin{definition}[Interpolation Condition]
+	We say that the interpolation condition holds if there exists $x^*\in\mathcal{X}^*$ s.t.
+	\[
+		\min_{x\in\mathbb{R}^n}f_i(x) = f_i(x^*)\ \ \text{for}\ \ i=1, \dots, n.
+	\]
+\end{definition}
 
 \subsection{Main Results \& Methodology}
 
@@ -123,6 +127,18 @@ The main results of the paper are convergence bounds using the ER condition for 
 		\mathbb{E}\left[||g(x) - g(x^*) - (\nabla f(x) - \nabla f(x^*))||^2\right] \leq 2\rho (f(x) - f(x^*)), \ \ \forall x\in\mathbb{R}^d.
 	\]
 \end{definition}
+
+
+\begin{lemma}[Variance Bound]
+	If $g\in\text{ER}(\rho)$ then
+
+	\[
+		\mathbb{E}\left[||g(x)||^2\right]\leq 4\rho(f(x) - f^*) + ||\nabla f(x)||^2 + 2\sigma^2.
+	\]
+\end{lemma}
+
+This bound allows the avoidance of the stronger assumptions of bounded gradient or bounded variance (\textit{General Assumption 5}).
+
 
 \begin{theorem}[QC Functions with Constant and Decreasing Step-sizes]
 	Assume \textit{General Assumptions}, $f(x)$ is $\zeta$-QC with respect to $x^*$, and $g\in\text{ER}(\rho)$. Let $0 < \gamma_k < \frac{\zeta}{2\rho + L}$ for all $k\in\mathbb{N}$ and let $r_0\coloneqq ||x^0 - x^*||^2$.
@@ -171,7 +187,13 @@ The main results of the paper are convergence bounds using the ER condition for 
 	When the function interpolates the data, SGD converges to the solution at a linear rate.
 \end{theorem}
 
+\textbf{Key Approaches:}
+
 \subsection{Discussion}
+
+With only \textit{General Assumptions}, Definition 3.1 (ER) is shown to be strictly weaker than multiple previously used
+assumptions, including the important
+
 \section{Stochastic Gradient Descent with Momentum}
 \label{section4}
 \subsection{Previous Research \& Motivation}

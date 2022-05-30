@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2022/Arch Linux)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: final.aux
+The style file: unsrtnat.bst
+Database file #1: final.bib
+Warning--empty journal in https://doi.org/10.48550/arxiv.1808.10396
+You've used 16 entries,
+            2481 wiz_defined-function locations,
+            660 strings with 8228 characters,
+and the built_in function-call counts, 6111 in all, are:
+= -- 496
+> -- 355
+< -- 4
++ -- 135
+- -- 103
+* -- 478
+:= -- 985
+add.period$ -- 59
+call.type$ -- 16
+change.case$ -- 32
+chr.to.int$ -- 16
+cite$ -- 17
+duplicate$ -- 282
+empty$ -- 554
+format.name$ -- 119
+if$ -- 1307
+int.to.chr$ -- 1
+int.to.str$ -- 17
+missing$ -- 8
+newline$ -- 98
+num.names$ -- 50
+pop$ -- 155
+preamble$ -- 1
+purify$ -- 16
+quote$ -- 0
+skip$ -- 190
+stack$ -- 0
+substring$ -- 188
+swap$ -- 47
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 112
+warning$ -- 1
+while$ -- 41
+width$ -- 0
+write$ -- 226
+(There was 1 warning)
