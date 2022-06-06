@@ -370,13 +370,12 @@ More importantly, although in this report we have only focused on RMSProp, the e
 %Optionally include extra information (complete proofs, additional experiments and plots) in the appendix.
 %This section will often be part of the supplemental material.
 \newpage
-begin{appendices}
 \appendix
 \section{Appendix}\label{app:Appendix}
 % TODO: Fix spacing between tag and equation below.
 We say that $ABC$ holds with $A,B,C > 0$ if
-\begin{equation}
-	\mathbb{E}\left[||g(x)||^2] \leq 2A(f(x) - f(x^*)) + B||\nabla f(x)||^2 + C\ \ \ \ \ \ \ \ \ \ \ \ \ \ \tag{A.1}
+\begin{equation}\label{eqA1}
+	\mathbb{E}\left[||g(x)||^2\right] \leq 2A(f(x) - f(x^*)) + B||\nabla f(x)||^2 + C\tag{A.1}
 \end{equation}
 \begin{figure}[h]
 \label{fig1}
@@ -395,5 +394,4 @@ We say that $ABC$ holds with $A,B,C > 0$ if
 	example, but for each counter example in which Adam diverges, there exists a larger $\beta$ that can make Adam
 	converge. Step size is set as $\alpha_t = \frac{1}{\sqrt{t}}$.}
 \end{figure}
-\end{appendices}
 \end{document}
