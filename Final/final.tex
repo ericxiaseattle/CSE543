@@ -101,45 +101,19 @@ Prior to~\cite{https://doi.org/10.48550/arxiv.2006.10311}, standard convergence 
 in exploiting additional structure of classes of nonconvex function, such as error bound properties~\cite{Fabian2010ErrorBN},
 quasi (strong) convexity~\cite{https://doi.org/10.48550/arxiv.1906.11985, JMLR:v19:16-465, https://doi.org/10.48550/arxiv.1710.00797}, and quadratic growth condition~\cite{doi:10.1137/S1052623499359178}.
 
-In~\cite{https://doi.org/10.48550/arxiv.2006.10311}, Gower et al. provide a new general analsysis of SGD focusing on the two weakest of these properties, quasar (strongly) convex (QC) functions and functions satisfying the
+In~\cite{https://doi.org/10.48550/arxiv.2006.10311}, Gower et al. provide a new general analysis of SGD focusing on the two weakest of these properties, quasar (strongly) convex (QC) functions and functions satisfying the
 Polyak-Łojasiewicz (PL) conditions~\cite{POLYAK1963864}, using the expected residual (ER) condition~\cite{Gower2021StochasticQM}.
 
 \subsection{Additional Assumptions}
 
-On top of \textit{General Assumptions}, the paper makes the mild assumption that the \textit{gradient noise} $\sigma^2$ is finite.
-It also assumes the interpolation condition, satisfied by many overparameterized deep NNs achieveing zero loss on training data:
-
-\begin{definition}[Interpolation Condition]
-	We say that the interpolation condition holds if there exists $x^*\in\mathcal{X}^*$ s.t.
-	\[
-		\min_{x\in\mathbb{R}^n}f_i(x) = f_i(x^*)\ \ \text{for}\ \ i=1, \dots, n.
-	\]
-\end{definition}
+On top of \textit{General Assumptions}, the paper assumes that the \textit{gradient noise} $\sigma^2$ is finite and that the Expected Residual condition holds, where $g\in\text{ER}(\rho)$ if
+\begin{equation}
+	\mathbb{E}\left[||g(x) - g(x^*) - (\nabla f(x) - \nabla f(x^*))||^2\right] \leq 2\rho (f(x) - f(x^*)), \ \ \forall x\in\mathbb{R}^d.
+\end{equation}
 
 \subsection{Main Results \& Methodology}
 
 The main results of the paper are convergence bounds using the ER condition for SGD on QC functions and minibatch SGD on PL functions.
-
-\begin{definition}[Expected Residual]
-	We say $g\in\text{ER}(\rho)$ if
-
-	\[
-		\mathbb{E}\left[||g(x) - g(x^*) - (\nabla f(x) - \nabla f(x^*))||^2\right] \leq 2\rho (f(x) - f(x^*)), \ \ \forall x\in\mathbb{R}^d.
-	\]
-\end{definition}
-
-
-\begin{lemma}[Variance Bound]
-	If $g\in\text{ER}(\rho)$ then
-
-	\[
-		\mathbb{E}\left[||g(x)||^2\right]\leq 4\rho(f(x) - f^*) + ||\nabla f(x)||^2 + 2\sigma^2.
-	\]
-\end{lemma}
-
-This bound allows the avoidance of the stronger assumptions of bounded gradient or bounded variance (\textit{General Assumption 5}).
-
-
 \begin{theorem}[QC Functions with Constant and Decreasing Step-sizes]
 	Assume \textit{General Assumptions}, $f(x)$ is $\zeta$-QC with respect to $x^*$, and $g\in\text{ER}(\rho)$. Let $0 < \gamma_k < \frac{\zeta}{2\rho + L}$ for all $k\in\mathbb{N}$ and let $r_0\coloneqq ||x^0 - x^*||^2$.
 	Then iterates of SGD satisfy
@@ -174,25 +148,55 @@ This bound allows the avoidance of the stronger assumptions of bounded gradient 
 \begin{theorem}[PL Functions with Constant Step-sizes]
 	Assume \textit{General Assumptions}, $f\in\text{PL}(\mu)$, and $g\in\text{ER}(\rho)$. Let $\gamma_k = \gamma\leq \frac{1}{1+2\rho/\mu}\frac{1}{L}$, for all $k$, then SGD converges as follows:
 
-	\[
+	\begin{equation}
 		\mathbb{E}[f(x^k) - f^*] \leq (1-\gamma\mu)^k[f(x^0) - f^*] + \frac{L\gamma\sigma^2}{\mu}.
-	\]
+	\end{equation}
 
 	Thus, given $\epsilon > 0$ and using step size $\gamma = \frac{1}{L}\min\{\frac{\mu\epsilon}{2\sigma^2}, \frac{1}{1+2\rho/\mu}\}$ we have that
 
-	\[
+	\begin{equation}
 		k\geq \frac{L}{\mu}\max\{\frac{2\sigma^2}{\mu\epsilon}, 1+\frac{2\rho}{\mu}\}\log\left(\frac{2(f(x^0) - f^*)}{\epsilon}\right) \implies \mathbb{E}[f(x^k) - f^*]\leq \epsilon.
-	\]
+	\end{equation}
 
 	When the function interpolates the data, SGD converges to the solution at a linear rate.
 \end{theorem}
 
-\textbf{Key Approaches:}
+We will now elaborate on the methodology used to achieve the results. Taking $z=x-\frac{1}{L}(\nabla f(x) - \nabla f(x^*))$ for any $x,z\in\mathbb{R}^d$ that defines $L$-smoothness of $f$, the definition for $L$-smooth may be rearranged st.
+\begin{equation}
+	||\nabla f(x)||^2 \leq 2L(f(x) - f(x^*)).
+\end{equation}
+
+Using this and the definitions of Strong Growth Condition + L-smooth, Weak Growth Condition, Expected Smoothness, and ER in that successive order, it follows from simple rearrangements and taking expectations that this order also gives the descending strength of the concerned assumptions.
+Using (1) and (4) together gives
+\begin{equation}
+	\mathbb{E}_D\left[||g(x)||^2\right]\leq 2(2\rho + L)(f(x) - f(x^*)) + 2\sigma^2,
+\end{equation}
+
+where $g\in\text{ER}(\rho)$ and $x\in\mathbb{R}^d$. With an unbiased estimate of the gradient $g(x)$ we can then use SGD to solve the unconstrained finite-sum optimization problem by sampling $g(x^k)$ i.i.d. and iterating
+\[
+	x^{k+1} = x^k - \gamma^k g(x^k).
+\]
+We have
+\[
+	||x^{k+1} - x^*||^2 = ||x^k - x^*||^2 - 2\gamma_k \langle g(x^k), x^k - x^*\rangle + \gamma_k^2 ||g(x^k)||^2.
+\]
+By rearranging and taking expectation, then summing over $k=0, \dots, t-1$ and using telescopic cancellation, we have that iterates of SGD satisfy the equation in Theorem 3.1 and the remaining conclusions in Theorem 3.1 follow by substitutions and integral bounds.
+For Theorem 3.2, smoothness of $f$ is combined with SGD update rule, where expectation conditioned on $x^k$ is taken and the resultant geometric series summed to get (2). Dividing the RHS of (2) into two parts and bounding each separately by $\frac{\epsilon}{2}$, we restrict
+the step size as in Theorem 3.2 and insert $\gamma$ into a rearrangement of these bounds to get (3).
 
 \subsection{Discussion}
 
-With only \textit{General Assumptions}, Definition 3.1 (ER) is shown to be strictly weaker than multiple previously used
-assumptions, including the important
+The ER condition relies solely on $L$-smoothness of $f$ and interpolation of data points and is shown above to be strictly weaker than previous assumptions, including the bounded gradient. Not only does ER hold for a larger class of assumptions than standard convergence theory in nonconvex
+setting which relies on bounded gradient assumption~\cite{https://doi.org/10.48550/arxiv.1106.5730, JMLR:v15:hazan14a, Rakhlin2012MakingGD} or a growth condition~\cite{Bertsekas1995NeurodynamicPA, https://doi.org/10.48550/arxiv.1606.04838, Schmidt2017MinimizingFS},
+resulting convergence rates either match or exceed state-of-the-art for both QC and PL functions.
+Recent evidence suggests a QC structure for loss functions in NNs~\cite{Zhou2019SGDCT} and this work recovers a $O(1\sqrt{k})$ convergence rate for QC functions with only the ER assumption.
+
+For PL functions, SGD was previously shown to converge at a rate of $O(1/\sqrt{k})$ assuming bounded gradients~\cite{Karimi2016LinearCO}. Assuming in addition the interpolation and SGC, a linear rate was achieved in Vaswani et al. 2019, but with a suboptimal dependence on the condition number
+of the function. This work achieves linear convergence to a neighborhood for PL functions.
+
+Recently, Khaled and Richtarik (2020)~\cite{https://doi.org/10.48550/arxiv.2002.03329} present convergence analysis of SGD in nonconvex setting, relying on the ABC assumption (A.1), of which all previously discussed assumptions SGC, WGC, ES, and ER are special cases by taking different values for $A,B,C$. Whereas
+Theorem 3.2 above is less general and therefore stronger than Theorem 3 in Khaled and Richtarik's work, unlike~\cite{https://doi.org/10.48550/arxiv.2002.03329}, Theorem 3.2 does not depend on total number of steps and this allows practitioners to simply
+observe SGD progress and stop when a desired tolerance is achieved.
 
 \section{Stochastic Gradient Descent with Momentum}
 \label{section4}
@@ -366,7 +370,14 @@ More importantly, although in this report we have only focused on RMSProp, the e
 %Optionally include extra information (complete proofs, additional experiments and plots) in the appendix.
 %This section will often be part of the supplemental material.
 \newpage
-\section*{Appendix}
+begin{appendices}
+\appendix
+\section{Appendix}\label{app:Appendix}
+% TODO: Fix spacing between tag and equation below.
+We say that $ABC$ holds with $A,B,C > 0$ if
+\begin{equation}
+	\mathbb{E}\left[||g(x)||^2] \leq 2A(f(x) - f(x^*)) + B||\nabla f(x)||^2 + C\ \ \ \ \ \ \ \ \ \ \ \ \ \ \tag{A.1}
+\end{equation}
 \begin{figure}[h]
 \label{fig1}
 \centering
@@ -384,4 +395,5 @@ More importantly, although in this report we have only focused on RMSProp, the e
 	example, but for each counter example in which Adam diverges, there exists a larger $\beta$ that can make Adam
 	converge. Step size is set as $\alpha_t = \frac{1}{\sqrt{t}}$.}
 \end{figure}
+\end{appendices}
 \end{document}
