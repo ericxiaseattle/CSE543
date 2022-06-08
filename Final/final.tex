@@ -106,19 +106,18 @@ In~\cite{https://doi.org/10.48550/arxiv.2006.10311}, Gower et al. provide a new 
 Polyak-Łojasiewicz (PL) conditions~\cite{POLYAK1963864}, using the expected residual (ER) condition~\cite{Gower2021StochasticQM}.
 
 \subsection{Additional Assumptions}
-
 On top of \textit{General Assumptions}, the paper assumes that the \textit{gradient noise} $\sigma^2$ is finite and that the Expected Residual condition holds, where $g\in\text{ER}(\rho)$ if
 \begin{equation}
+	\label{eq31}
 	\mathbb{E}\left[||g(x) - g(x^*) - (\nabla f(x) - \nabla f(x^*))||^2\right] \leq 2\rho (f(x) - f(x^*)), \ \ \forall x\in\mathbb{R}^d.
 \end{equation}
 
 \subsection{Main Results \& Methodology}
-
 The main results of the paper are convergence bounds using the ER condition for SGD on QC functions and minibatch SGD on PL functions.
 \begin{theorem}[QC Functions with Constant and Decreasing Step-sizes]
+	\label{them31}
 	Assume \textit{General Assumptions}, $f(x)$ is $\zeta$-QC with respect to $x^*$, and $g\in\text{ER}(\rho)$. Let $0 < \gamma_k < \frac{\zeta}{2\rho + L}$ for all $k\in\mathbb{N}$ and let $r_0\coloneqq ||x^0 - x^*||^2$.
 	Then iterates of SGD satisfy
-
 	\[
 		\substack{\min \\ t=0,\dots, k-1}\mathbb{E}\left[f(x^t) - f(x^*)\right] \leq \frac{1}{\sum_{i=0}^{k-1}}\gamma_i (\zeta - \gamma_i (2\rho + L)) \left[\frac{r^0}{2} + \sigma^2 \sum^{k-1}_{t=0}\gamma_t^2\right].
 	\]
@@ -126,7 +125,7 @@ The main results of the paper are convergence bounds using the ER condition for 
 	Furthermore, for $\gamma < \frac{\zeta}{2\rho + L}$, we have that
 
 	\textbf{1}. If $\forall k\in\mathbb{N}$, $\gamma_k = \gamma \equiv \frac{1}{2}\frac{\zeta}{(2\rho + L)}$ then $\forall k\in\mathbb{N},\ \substack{\min \\ t=0,\dots, k-1}\mathbb{E}[f(x^t) - f(x^*)]\leq 2r_0 \frac{2\rho + L}{\zeta^2 k} + \frac{\sigma^2}{2\rho + L}$. \\
-	\textbf{2}. Suppose SGD is run for $T$ iterations. If $\gamma_k = \frac{\gamma}{\sqrt{T}}$ for all $k$ from 0 to $T-1$, then
+	\textbf{2}. Suppose SGD is run for $T$ iterations. If $\gamma_k = \frac{\gamma}{\sqrt{T}}$ for all $k$ from 0 to $T-1$, then\\
 	\makebox[\textwidth]{$\substack{\min \\ t=0,\dots, T-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{r_0 + 2\gamma^2 \sigma^2}{\gamma\sqrt{T}}$}
 	\textbf{3}. If $\forall k\in\mathbb{N},\ \gamma_k = \frac{\gamma}{\sqrt{k+1}}$ then $\forall k \in\mathbb{N}$, \\
 	\makebox[\textwidth]{$\substack{\min \\ t=0,\dots, k-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{1}{4\gamma} \frac{r_0 + 2\gamma^2 \sigma^2 (\log{(k)} + 1)}{\zeta (\sqrt{k} - 1) - \gamma(\rho + L/2)(\log{(k)} + 1)}$,}
@@ -134,57 +133,54 @@ The main results of the paper are convergence bounds using the ER condition for 
 \end{theorem}
 
 \begin{theorem}[PL Functions with Constant Step-sizes]
+	\label{them32}
 	Assume \textit{General Assumptions}, $f\in\text{PL}(\mu)$, and $g\in\text{ER}(\rho)$. Let $\gamma_k = \gamma\leq \frac{1}{1+2\rho/\mu}\frac{1}{L}$, for all $k$, then SGD converges as follows:
-
 	\begin{equation}
+		\label{eq32}
 		\mathbb{E}[f(x^k) - f^*] \leq (1-\gamma\mu)^k[f(x^0) - f^*] + \frac{L\gamma\sigma^2}{\mu}.
 	\end{equation}
-
 	Thus, given $\epsilon > 0$ and using step size $\gamma = \frac{1}{L}\min\{\frac{\mu\epsilon}{2\sigma^2}, \frac{1}{1+2\rho/\mu}\}$ we have that
-
 	\begin{equation}
+		\label{eq33}
 		k\geq \frac{L}{\mu}\max\{\frac{2\sigma^2}{\mu\epsilon}, 1+\frac{2\rho}{\mu}\}\log\left(\frac{2(f(x^0) - f^*)}{\epsilon}\right) \implies \mathbb{E}[f(x^k) - f^*]\leq \epsilon.
 	\end{equation}
-
 	When the function interpolates the data, SGD converges to the solution at a linear rate.
 \end{theorem}
 
 We will now elaborate on the methodology used to achieve the results. Taking $z=x-\frac{1}{L}(\nabla f(x) - \nabla f(x^*))$ for any $x,z\in\mathbb{R}^d$ that defines $L$-smoothness of $f$, the definition for $L$-smooth may be rearranged st.
 \begin{equation}
+	\label{eq34}
 	||\nabla f(x)||^2 \leq 2L(f(x) - f(x^*)).
 \end{equation}
 
 Using this and the definitions of Strong Growth Condition + L-smooth, Weak Growth Condition, Expected Smoothness, and ER in that successive order, it follows from simple rearrangements and taking expectations that this order also gives the descending strength of the concerned assumptions.
-Using (1) and (4) together gives
+
+Using \hyperref[eq31]{(1)} and \hyperref[eq34]{(4)} together gives
 \begin{equation}
 	\mathbb{E}_D\left[||g(x)||^2\right]\leq 2(2\rho + L)(f(x) - f(x^*)) + 2\sigma^2,
 \end{equation}
-
 where $g\in\text{ER}(\rho)$ and $x\in\mathbb{R}^d$. With an unbiased estimate of the gradient $g(x)$ we can then use SGD to solve the unconstrained finite-sum optimization problem by sampling $g(x^k)$ i.i.d. and iterating
-\[
-	x^{k+1} = x^k - \gamma^k g(x^k).
+\[x^{k+1} = x^k - \gamma^k g(x^k).
 \]
 We have
-\[
-	||x^{k+1} - x^*||^2 = ||x^k - x^*||^2 - 2\gamma_k \langle g(x^k), x^k - x^*\rangle + \gamma_k^2 ||g(x^k)||^2.
+\[||x^{k+1} - x^*||^2 = ||x^k - x^*||^2 - 2\gamma_k \langle g(x^k), x^k - x^*\rangle + \gamma_k^2 ||g(x^k)||^2.
 \]
-By rearranging and taking expectation, then summing over $k=0, \dots, t-1$ and using telescopic cancellation, we have that iterates of SGD satisfy the equation in Theorem 3.1 and the remaining conclusions in Theorem 3.1 follow by substitutions and integral bounds.
-For Theorem 3.2, smoothness of $f$ is combined with SGD update rule, where expectation conditioned on $x^k$ is taken and the resultant geometric series summed to get (2). Dividing the RHS of (2) into two parts and bounding each separately by $\frac{\epsilon}{2}$, we restrict
-the step size as in Theorem 3.2 and insert $\gamma$ into a rearrangement of these bounds to get (3).
+By rearranging and taking expectation, then summing over $k=0, \dots, t-1$ and using telescopic cancellation, we have that iterates of SGD satisfy the equation in \hyperref[them31]{Theorem 3.1} and the remaining conclusions in \hyperref[them31]{Theorem 3.1} follow by substitutions and integral bounds.
+For \hyperref[them32]{Theorem 3.2}, smoothness of $f$ is combined with SGD update rule, where expectation conditioned on $x^k$ is taken and the resultant geometric series summed to get \hyperref[eq32]{(2)}. Dividing the RHS of \hyperref[eq32]{(2)} into two parts and bounding each separately by $\frac{\epsilon}{2}$, we restrict
+the step size as in \hyperref[them32]{Theorem 3.2} and insert $\gamma$ into a rearrangement of these bounds to get \hyperref[eq33]{(3)}.
 
 \subsection{Discussion}
 
-The ER condition relies solely on $L$-smoothness of $f$ and interpolation of data points and is shown above to be strictly weaker than previous assumptions, including the bounded gradient. Not only does ER hold for a larger class of assumptions than standard convergence theory in nonconvex
-setting which relies on bounded gradient assumption~\cite{https://doi.org/10.48550/arxiv.1106.5730, JMLR:v15:hazan14a, Rakhlin2012MakingGD} or a growth condition~\cite{Bertsekas1995NeurodynamicPA, https://doi.org/10.48550/arxiv.1606.04838, Schmidt2017MinimizingFS},
+The ER condition relies solely on $L$-smoothness of $f$ and interpolation of data points and is shown above to be strictly weaker than previous assumptions, including the bounded gradient. Not only does ER hold for a larger class of assumptions than standard convergence theory in nonconvex setting which relies on bounded gradient assumption~\cite{https://doi.org/10.48550/arxiv.1106.5730, JMLR:v15:hazan14a, Rakhlin2012MakingGD} or a growth condition~\cite{Bertsekas1995NeurodynamicPA, https://doi.org/10.48550/arxiv.1606.04838, Schmidt2017MinimizingFS},
 resulting convergence rates either match or exceed state-of-the-art for both QC and PL functions.
 Recent evidence suggests a QC structure for loss functions in NNs~\cite{Zhou2019SGDCT} and this work recovers a $O(1\sqrt{k})$ convergence rate for QC functions with only the ER assumption.
 
 For PL functions, SGD was previously shown to converge at a rate of $O(1/\sqrt{k})$ assuming bounded gradients~\cite{Karimi2016LinearCO}. Assuming in addition the interpolation and SGC, a linear rate was achieved in Vaswani et al. 2019, but with a suboptimal dependence on the condition number
 of the function. This work achieves linear convergence to a neighborhood for PL functions.
 
-Recently, Khaled and Richtarik (2020)~\cite{https://doi.org/10.48550/arxiv.2002.03329} present convergence analysis of SGD in nonconvex setting, relying on the ABC assumption (\textit{equation A.1 in Appendix}),
+Recently, Khaled and Richtarik (2020)~\cite{https://doi.org/10.48550/arxiv.2002.03329} present convergence analysis of SGD in nonconvex setting, relying on the ABC assumption (\textit{equation \hyperref[eqa1]{A.1} in Appendix}),
 of which all previously discussed assumptions SGC, WGC, ES, and ER are special cases by taking different values for $A,B,C$. Whereas
-Theorem 3.2 above is less general and therefore stronger than Theorem 3 in Khaled and Richtarik's work, unlike~\cite{https://doi.org/10.48550/arxiv.2002.03329}, Theorem 3.2 does not depend on total number of steps and this allows practitioners to simply
+\hyperref[them32]{Theorem 3.2} above is less general and therefore stronger than Theorem 3 in Khaled and Richtarik's work, unlike~\cite{https://doi.org/10.48550/arxiv.2002.03329}, \hyperref[them32]{Theorem 3.2} does not depend on total number of steps and this allows practitioners to simply
 observe SGD progress and stop when a desired tolerance is achieved.
 
 \section{Stochastic Gradient Descent with Momentum}
@@ -203,8 +199,7 @@ and is the first convergence guarantee for SGDM in a multistage setting.
 The main results of this paper are the convergence bounds of SGDM and Multistage SGDM. In SGDM, let $\alpha$ and $\beta$ be learning rate and momentum weight, we have the following result:
 \begin{theorem}[Non-convex SGDM]
 	\label{theom41} Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, let $\alpha \leq \min\{\frac{1 - \beta}{L(4 - \beta + \beta^2)}, \frac{1 - \beta}{2\sqrt{2}L\sqrt{\beta + \beta^2}}\}$, then
-	\[
-		\frac{1}{k}\sum_{i = 1}^{k}\mathbb{E}[\|g_t\|^2] \leq \frac{2 (f(x_1) - f^*}{k\alpha} + (\frac{\beta + 3\beta^2}{2 (1 + \beta)} + 1)L\alpha\sigma^2 = \mathcal{O}(\frac{f(x_1) - f^*}{k\alpha} + L\alpha\sigma^2)
+	\[\frac{1}{k}\sum_{i = 1}^{k}\mathbb{E}[\|g_t\|^2] \leq \frac{2 (f(x_1) - f^*}{k\alpha} + (\frac{\beta + 3\beta^2}{2 (1 + \beta)} + 1)L\alpha\sigma^2 = \mathcal{O}(\frac{f(x_1) - f^*}{k\alpha} + L\alpha\sigma^2)
 	\]
 \end{theorem}
 \begin{theorem}[Strongly Convex SGDM]
@@ -246,12 +241,12 @@ One key observation on the role of $\beta$ in equation (\hyperref[eq42]{2}) from
 
 While previous work assumed the boundedness of $g_t$ to circumvent above difficulty, this work constructed a novel Lyapunov function to handle this deviation:
 \[
-L_t = (f(z_t) - f^*) + \sum_{i = 1}^{k - 1}c_i\|x^{k + 1 - i} - x^{k - i}\|^2
-\]
-where $z_t = \begin{cases}
+L_t = (f(z_t) - f^*) + \sum_{i = 1}^{k - 1}c_i\|x^{k + 1 - i} - x^{k - i}\|^2 \ \
+\text{with} \ \  z_t = \begin{cases}
 	x_t & t = 1 \\
 	\frac{1}{1 - \beta}x_t - \frac{\beta}{1 - \beta}x_{t - 1} & t \geq 2
-\end{cases}$\\
+\end{cases}
+\]
 
 The authors then argued that by carefully defining $\{c_i\}_i^\infty$ such that it is a positive sequence in a diminishing fashion, $L_t$ is indeed a Lyapunov function, thus one can show that $\mathbb{E}[L_{t + 1} - L_t] \leq -R_1E[\|g_t\|^2] + R_2$ for some positive constants $R_1 \geq \frac{\alpha}{2}$ and $R_2 = \mathcal{O}(L\alpha\sigma^2)$. By telescoping this inequality, the convergence of SGDM in \hyperref[theom41]{Theorem 4.1} is then obtained, and similar techniques were utilized to derive the results in \hyperref[theom42]{Theorem 4.2} under a strongly convex setting and in \hyperref[theom43]{Theorem 4.3} for Multistage SGDM.
 \subsection{Discussion}
@@ -267,7 +262,7 @@ However, the convergence analysis in this paper does have some weaknesses and li
 Prior to~\cite{shi2021rmsprop} by Shi et al., there had been one line of research on the convergence of variants of Adam (which includes RMSProp) with additional assumptions.~\cite{https://doi.org/10.48550/arxiv.2003.02395} provides a clean convergence result but assumed a large $\epsilon$ compared to  weighted moving average of the squared gradient, which is in contrary to the spirit of RMSProp.~\cite{https://doi.org/10.48550/arxiv.1807.06766} analyzes deterministic and stochastic RMSprop, but their results were based on an rather unrealistic assumption that all stochastic gradients have the same sign. Furthermore, all the above mentioned works assume the gradients to be bounded.
 
 During the review on one famous counter-example to the convergence of Adam from~\cite{https://doi.org/10.48550/arxiv.1904.09237}, Shi et al. ran simulations and found that there is always a threshold of the moving average parameter above which
-RMSProp converges (See Figure \hyperref[fig1]{1} in Appendix). This observation motivated them to further investigate the relationship between this parameter and the performance of the algorithm. They discovered that the convergence of RMSProp algorithm is
+RMSProp converges (See \hyperref[fig1]{Figure 1} in Appendix). This observation motivated them to further investigate the relationship between this parameter and the performance of the algorithm. They discovered that the convergence of RMSProp algorithm is
 contingent to the choice of the moving average parameter. Moreover, they proved that RMSProp converges to stationary points for certain types of problems and to bounded region for the others, which was the first result of convergence
 of this algorithm with no assumption about the boundedness of the gradient norm.
 
@@ -322,8 +317,9 @@ The derivation to the results for stochastic RMSProp is more complicated: Based 
 	Realizable & Convergence to stationary points (\hyperref[coro51]{Corollary 5.1}) & Divergence\\
 	\hline
 \end{tabular}
-\vspace{2pt}
+\vspace{1mm}
 \caption{Conjecture on convergence outcomes of RMSProp on classes of optimization problems.}
+\vspace{-8mm}
 \end{table}
 \newline
 The rationale to prove this conjecture is to track the magnitude of squared gradient terms and calculate the diminishing speed of $\|g\|_1$. Since $f$ is $L$-Lipschitz, by descent lemma, one can show the following inequality
@@ -340,18 +336,19 @@ More importantly, although in this report we have only focused on RMSProp, the e
 \label{section7}
 \subsection{Previous Research \& Motivation}
 Generally requiring less parameter tuning and faster convergence rates, adaptive gradient methods are one of the most important variants of SGD. Prior to~\cite{https://doi.org/10.48550/arxiv.2106.08208} by Huang et al., substantial work existed for adaptive gradient methods, though the focus was typically
-on either the empirical or theoretical side and only applied to some specific problem.~\cite{https://doi.org/10.48550/arxiv.2106.08208} propose SUPER-ADAM, a faster and universal framework of adaptive gradients, to address this gap.
+on either the empirical or theoretical side and only applied to some specific problem.~\cite{https://doi.org/10.48550/arxiv.2106.08208} proposes SUPER-ADAM, a faster and universal framework of adaptive gradients, to address this gap.
 \subsection{Additional Assumptions}
 In addition to \textit{General Assumptions}, we assume for the $\tau = 0$ case to be described in the Main Results \& Methodology that the objective function $\min_{x \in \mathbb{R}^d} f(x)$ is smooth. We also assume for both cases of $\tau=0,1$ that the smallest eigenvalue of the adaptive matrix
 in SUPER-ADAM is bounded below: Assume the adaptive matrix $H_t$ for all $t\geq 1$ satisfies $H_t \succeq \rho I_d\succ 0$, and $\rho > 0$ denotes a lower bound of the smallest eigenvalue of $H_t$ for all $t\geq 1$.
 \subsection{Main Results \& Methodology}
 The main results of this paper are convergence analyses of SUPER-ADAM in both theoretical and practical settings, demonstrating convergence rates that either match or exceed that of state-of-the-art. See \hyperref[fig2]{Figure 2} in Appendix for an overview of the SUPER-ADAM algorithm and
-Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walkthrough of the algorithm.
+Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walk-through of the algorithm.
 \begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 1$)]
 	We use the momentum-based variance reduced gradient estimator in~\cite{https://doi.org/10.48550/arxiv.1905.10018, https://doi.org/10.48550/arxiv.1905.05920}
-	In Figure 2, when $\mathcal{X}\subset\mathbb{R}^d$ and given $\mu_t = \frac{k}{m+t)^{1/3})}$ and $\alpha_{t+1}=c\mu^2_t$ for all $t\geq 0, 0 < \gamma \leq \frac{\rho m^{1/3}}{4kL}, \frac{1}{k^3} + \frac{10L^2 \gamma^2}{\rho^2}\leq c\leq \frac{m^{2/3}}{k^2}$,
+	In \hyperref[fig2]{Figure 2}, when $\mathcal{X}\subset\mathbb{R}^d$ and given $\mu_t = \frac{k}{m+t)^{1/3})}$ and $\alpha_{t+1}=c\mu^2_t$ for all $t\geq 0, 0 < \gamma \leq \frac{\rho m^{1/3}}{4kL}, \frac{1}{k^3} + \frac{10L^2 \gamma^2}{\rho^2}\leq c\leq \frac{m^{2/3}}{k^2}$,
 	$m\geq\max\left(\frac{3}{2}, k^3, \frac{8^{3/2}}{(3k)^{3/2}}\right)$ and $k > 0$, we have
 	\begin{equation}
+		\label{eq63}
 		\frac{1}{T}\sum^T_{t=1}\mathbb{E}||\mathcal{G}_{\mathcal{X}}(x_t, \nabla f(x_t), \gamma)||\leq
 		\frac{1}{T}\sum^T_{t=1}\mathbb{E}[\mathcal{M}_t]\leq
 		\frac{2\sqrt{2G}m^{1/6}}{T^{1/2}} + \frac{2\sqrt{2G}}{T^{1/3}},
@@ -361,10 +358,10 @@ Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walkthrough 
 \begin{corollary}
 		See \hyperref[coro51appendix]{Corollary A.2} in Appendix
 \end{corollary}
-\textbf{Remark.} SUPER-ADAM $(\tau = 1)$ has a gradient complexity of $2T = \tilde{O}(\epsilon^{-3})$ for finding an $\epsilon$-stationary point. \textit{See Remark A.2 in Appendix for proof.}
+\textbf{Remark.} SUPER-ADAM $(\tau = 1)$ has a gradient complexity of $2T = \tilde{O}(\epsilon^{-3})$ for finding an $\epsilon$-stationary point. \textit{See \hyperref[rmka2]{Remark A.2} in Appendix for proof.}
 \begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 0$)]
 	We use the basic momentum stochastic gradient estimator~\cite{https://doi.org/10.48550/arxiv.1412.6980}.
-	In Figure 2, when $\mathcal{X}\subset \mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)^{1/2}}, \alpha_{t+1} = c\mu_t$ for all $t\geq 0, k > 0, 0 < \gamma \leq \frac{\rho m^{1/2}}{8Lk}, \frac{8L\gamma}{\rho}\leq c\leq \frac{m^{1/2}}{k}$,
+	In \hyperref[fig2]{Figure 2}, when $\mathcal{X}\subset \mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)^{1/2}}, \alpha_{t+1} = c\mu_t$ for all $t\geq 0, k > 0, 0 < \gamma \leq \frac{\rho m^{1/2}}{8Lk}, \frac{8L\gamma}{\rho}\leq c\leq \frac{m^{1/2}}{k}$,
 	and $m\geq k^2$, we have
 	\begin{equation}
 		\frac{1}{T}\sum^T_{t=1}\mathbb{E}||\mathcal{G}_{\mathcal{X}}(x_t, \nabla f(x_t), \gamma)||\leq
@@ -376,7 +373,7 @@ Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walkthrough 
 \begin{corollary}
 	See \hyperref[coro51appendix]{Corollary A.3} in Appendix
 \end{corollary}
-\textbf{Remark.} SUPER-ADAM $(\tau = 0)$ has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an $\epsilon$-stationary point. \textit{See Remark A.3 in Appendix for proof.}
+\textbf{Remark.} SUPER-ADAM $(\tau = 0)$ has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an $\epsilon$-stationary point. \textit{See \hyperref[rmka3]{Remark A.3} in Appendix for proof.}
 
 We will now discuss the primary methodology used to achieve the above results. For the $\tau = 1$ case, the stochastic gradient estimator uses the same as that in STORM~\cite{https://doi.org/10.48550/arxiv.1905.10018}, however in SUPER-ADAM, a weighted solution $x_{t+1}$ is introduced at step 10 by
 using momentum update, allowing different ALRs and variance reduced techniques to be flexibly used at step 9. This is in comparison to the simple GD iteration with a specific monotonically decreasing ALR used in STORM. Similarly, although the $\tau = 0$ case uses the
@@ -389,10 +386,10 @@ Convergence analysis of SUPER-ADAM utilizes bounds of $\mu_t, \alpha_{t+1}, c,$ 
 $\phi_{t+1} - \phi_t$ and defining a gradient mapping $\mathcal{G}_{\mathcal{X}}(x_t, \nabla f(x_t),\gamma) = \frac{1}{\gamma}(x_t - x^+_{t+1})$, where $x^+_{t+1} = \arg\min_{x\in\mathcal{X}}\{\langle\nabla f(x_t), x\rangle + \frac{1}{\gamma} V_t(x,x_t)\}$,
 it can then be shown that step 9 of SUPER-ADAM algorithm is equivalent to the generalized projection problem $\tilde{x}_{t+1} = \arg\min_{x\in\mathcal{X}}\left\{\langle g_t, x\rangle + \frac{1}{\gamma}V_t (x,x_t)\right\}$.
 Defining a measure $\mathcal{M}_t\coloneqq\frac{1}{\rho}||\nabla f(x_t) - g_t|| + \frac{1}{\gamma}||\tilde{x}_{t+1} - x_t||$,
-we can then bound the sum of the expected gradient mappings over $T$ iterations by the summation of $\mathbb{E}[\mathcal{M}_t]$ over all $T$, for which an upper bound is found thus giving (3).
+we can then bound the sum of the expected gradient mappings over $T$ iterations by the summation of $\mathbb{E}[\mathcal{M}_t]$ over all $T$, for which an upper bound is found thus giving \hyperref[eq63]{(3)}.
 \subsection{Discussion}
-SUPER-ADAM achieves convergence rates that either match or exceed previous state-of-the-art while imposing much weaker assumptions and allowing for an univeral adaptive learning rate between different types of problems contexts.
-Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208} is presented in the appendix and gives a comparison of the complexities, convergence rates, adaptive learning rates, and assumptions betwen SUPER-ADAM and previous work including Adam, AdaGrad-Norm, AdaBelief, and STORM.
+SUPER-ADAM achieves convergence rates that either match or exceed previous state-of-the-art while imposing much weaker assumptions and allowing for an universal adaptive learning rate between different types of problems contexts.
+Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208} is presented in the appendix and gives a comparison of the complexities, convergence rates, adaptive learning rates, and assumptions between SUPER-ADAM and previous work including Adam, AdaGrad-Norm, AdaBelief, and STORM.
 Empirical evaluation of SUPER-ADAM is conducted with image classification on CIFAR-10, CIFAR-100 and Image Net dataset, as well as language modeling on the Wiki-Text2 dataset. SUPER-ADAM consistently outperformed the existing adaptive algorithms,
 as in Figures 1-5 in~\cite{https://doi.org/10.48550/arxiv.2106.08208}.
 \section{Additional Discussion \& Comments}
@@ -411,14 +408,14 @@ Throughout this report, we have seen that various new techniques have been utili
 \section{Appendix}\label{app:Appendix}
 % TODO: Fix spacing between tag and equation below.
 We say that $ABC$ holds with $A,B,C > 0$ if
-\begin{equation}\label{eqA1}
+\begin{equation}\label{eqa1}
 	\mathbb{E}\left[||g(x)||^2\right] \leq 2A(f(x) - f(x^*)) + B||\nabla f(x)||^2 + C\tag{A.1}
 \end{equation}
 \begin{figure}[h]
 \label{fig1}
 \centering
 \includegraphics[scale = 0.4]{rmsp.png}
-\caption{Phase diagram of the outcome of RMSprop on the counter example with the definition
+\caption{Phase diagram of the outcome of RMSProp on the counter example with the definition
 			\(f_t(x) =
 	\begin{cases}
 		Cx & \ \ \text{for $t$ mod $C = 1$}\\
@@ -455,7 +452,7 @@ We say that $ABC$ holds with $A,B,C > 0$ if
 	\end{equation}
 	where $G'=vL(f(x_1) - f^*) + \frac{v^2 \sigma^2}{8} + \frac{v^2 k^4 c^2 \sigma^2}{4m^{1/3}}\ln(m+T)$.
 \end{corollary}
-\textbf{Remark A.2} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $c=O(1)$ and $G = O(c^2 \sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has a convergence rate of $\tilde{O}\left(\frac{1}{T^{1/3}}\right)$.
+\textbf{Remark A.2} \label{rmka2} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $c=O(1)$ and $G = O(c^2 \sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has a convergence rate of $\tilde{O}\left(\frac{1}{T^{1/3}}\right)$.
 Let $\frac{1}{T^{1/3}}\leq \epsilon$, we have $T\geq \epsilon^{-3}$. Since SUPER-ADAM only requires computing two stochastic gradients at each iteration (e.g., only need tocompute stochastic gradients $\nabla f(x_{t+1}; s_{j_{t+1}})$
 and $\nabla f(x_t; s_{j_{t+1}})$ to estimate $g_{t+1}$), and needs $T$ iterations. Thus, SUPER-ADAM ($\tau = 1$) has a gradient complexity of $2T = \tilde{O}(\epsilon^{-3})$ for finding an $\epsilon$-stationary point.
 \begin{corollary}
@@ -468,7 +465,7 @@ and $\nabla f(x_t; s_{j_{t+1}})$ to estimate $g_{t+1}$), and needs $T$ iteration
 	\end{equation}
 	where $M'=vL(f(x_1) - f^*) + 2v\sigma^2 + 2vm\sigma^2 \ln(m+T)$.
 \end{corollary}
-\textbf{Remark A.3} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $M = O(\sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has convergence rate of $\tilde{O}\left(\frac{1}{T^{1/4}}\right)$.
+\textbf{Remark A.3} \label{rmka3} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $M = O(\sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has convergence rate of $\tilde{O}\left(\frac{1}{T^{1/4}}\right)$.
 Considering $\frac{1}{T^{1/4}}\leq\epsilon$, we have $T\geq\epsilon^{-4}$. Since our algorithm requires computing a stochastic gradient at each iteration and needs $T$ iterations, SUPER-ADAM ($\tau = 0$) has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an
 $\epsilon$-stationary point.
 \end{document}
