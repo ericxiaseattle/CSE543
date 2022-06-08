@@ -344,7 +344,7 @@ in SUPER-ADAM is bounded below: Assume the adaptive matrix $H_t$ for all $t\geq 
 \subsection{Main Results \& Methodology}
 The main results of this paper are convergence analyses of SUPER-ADAM in both theoretical and practical settings, demonstrating convergence rates that either match or exceed that of state-of-the-art. See \hyperref[fig2]{Figure 2} in Appendix for an overview of the SUPER-ADAM algorithm and
 Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walk-through of the algorithm.
-\begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 1$)]
+\begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 1$, $\mathcal{X}\subset\mathbb{R}^d$)]
 	We use the momentum-based variance reduced gradient estimator in~\cite{https://doi.org/10.48550/arxiv.1905.10018, https://doi.org/10.48550/arxiv.1905.05920}
 	In \hyperref[fig2]{Figure 2}, when $\mathcal{X}\subset\mathbb{R}^d$ and given $\mu_t = \frac{k}{m+t)^{1/3})}$ and $\alpha_{t+1}=c\mu^2_t$ for all $t\geq 0, 0 < \gamma \leq \frac{\rho m^{1/3}}{4kL}, \frac{1}{k^3} + \frac{10L^2 \gamma^2}{\rho^2}\leq c\leq \frac{m^{2/3}}{k^2}$,
 	$m\geq\max\left(\frac{3}{2}, k^3, \frac{8^{3/2}}{(3k)^{3/2}}\right)$ and $k > 0$, we have
@@ -356,11 +356,11 @@ Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walk-through
 	\end{equation}
 	where $G = \frac{f(x_1) - f^*}{k\rho\gamma} + \frac{m^{1/3}\sigma^2}{8k^2 L^2 \gamma^2} + \frac{k^2 c^2 \sigma^2}{4L^2 \gamma^2}\ln(m+T)$.
 \end{theorem}
-\begin{corollary}
+\begin{corollary}[Convergence Analysis of SUPER-ADAM ($\tau = 0$, $\mathcal{X}=\mathbb{R}^d$)]
 		See \hyperref[coro51appendix]{Corollary A.2} in Appendix
 \end{corollary}
 \textbf{Remark.} SUPER-ADAM $(\tau = 1)$ has a gradient complexity of $2T = \tilde{O}(\epsilon^{-3})$ for finding an $\epsilon$-stationary point. \textit{See \hyperref[rmka2]{Remark A.2} in Appendix for proof.}
-\begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 0$)]
+\begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 0$, $\mathcal{X}\subset\mathbb{R}^d$)]
 	We use the basic momentum stochastic gradient estimator~\cite{https://doi.org/10.48550/arxiv.1412.6980}.
 	In \hyperref[fig2]{Figure 2}, when $\mathcal{X}\subset \mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)^{1/2}}, \alpha_{t+1} = c\mu_t$ for all $t\geq 0, k > 0, 0 < \gamma \leq \frac{\rho m^{1/2}}{8Lk}, \frac{8L\gamma}{\rho}\leq c\leq \frac{m^{1/2}}{k}$,
 	and $m\geq k^2$, we have
@@ -371,7 +371,7 @@ Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walk-through
 	\end{equation}
 	where $M = \frac{f(x_1) - f^*}{\rho\gamma k} + \frac{2\sigma^2}{\rho\gamma kL} + \frac{2m\sigma^2}{\rho\gamma kL}\ln(m+T)$.
 \end{theorem}
-\begin{corollary}
+\begin{corollary}[Convergence Analysis of SUPER-ADAM ($\tau = 0$, $\mathcal{X}=\mathbb{R}^d$)]
 	See \hyperref[coro51appendix]{Corollary A.3} in Appendix
 \end{corollary}
 \textbf{Remark.} SUPER-ADAM $(\tau = 0)$ has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an $\epsilon$-stationary point. \textit{See \hyperref[rmka3]{Remark A.3} in Appendix for proof.}
@@ -390,7 +390,7 @@ Defining a measure $\mathcal{M}_t\coloneqq\frac{1}{\rho}||\nabla f(x_t) - g_t|| 
 we can then bound the sum of the expected gradient mappings over $T$ iterations by the summation of $\mathbb{E}[\mathcal{M}_t]$ over all $T$, for which an upper bound is found thus giving \hyperref[eq61]{(1)}.
 \subsection{Discussion}
 SUPER-ADAM achieves convergence rates that either match or exceed previous state-of-the-art while imposing much weaker assumptions and allowing for an universal adaptive learning rate between different types of problems contexts.
-Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208} is presented in the appendix and gives a comparison of the complexities, convergence rates, adaptive learning rates, and assumptions between SUPER-ADAM and previous work including Adam, AdaGrad-Norm, AdaBelief, and STORM.
+See \textit{Figure 3} in the Appendix for Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208}, which gives a comparison of the complexities, convergence rates, adaptive learning rates, and assumptions between SUPER-ADAM and previous work including Adam, AdaGrad-Norm, AdaBelief, and STORM.
 Empirical evaluation of SUPER-ADAM is conducted with image classification on CIFAR-10, CIFAR-100 and Image Net dataset, as well as language modeling on the Wiki-Text2 dataset. SUPER-ADAM consistently outperformed the existing adaptive algorithms,
 as in Figures 1-5 in~\cite{https://doi.org/10.48550/arxiv.2106.08208}.
 \section{Additional Discussion \& Comments}
@@ -469,4 +469,10 @@ and $\nabla f(x_t; s_{j_{t+1}})$ to estimate $g_{t+1}$), and needs $T$ iteration
 \textbf{Remark A.3} \label{rmka3} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $M = O(\sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has convergence rate of $\tilde{O}\left(\frac{1}{T^{1/4}}\right)$.
 Considering $\frac{1}{T^{1/4}}\leq\epsilon$, we have $T\geq\epsilon^{-4}$. Since our algorithm requires computing a stochastic gradient at each iteration and needs $T$ iterations, SUPER-ADAM ($\tau = 0$) has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an
 $\epsilon$-stationary point.
+\begin{figure}[h]
+	\label{fig3}
+	\centering
+	\includegraphics[scale = 0.5]{super-adam-comparison-table.png}
+	\caption{Gradient Complexities of SUPER-ADAM and Other Algorithms}
+\end{figure}
 \end{document}
