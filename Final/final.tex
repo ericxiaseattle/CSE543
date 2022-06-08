@@ -334,6 +334,7 @@ By examining the distribution of gradient norms among different sampled batches,
 More importantly, although in this report we have only focused on RMSProp, the extension of both theoretical and empirical results from this paper shows that the two parameters of Adam algorithm play different roles in contributing to the convergence of the algorithm and behave differently depending on the optimization problem. Specifically, the "problem-dependent" nature of $\beta$ clarifies the misconception that "Adam does not converge" from~\cite{https://doi.org/10.48550/arxiv.1904.09237}, and the authors are able to convey this idea throughout this paper in a convincing manner.
 \section{Adam}
 \label{section7}
+\setcounter{equation}{0}
 \subsection{Previous Research \& Motivation}
 Generally requiring less parameter tuning and faster convergence rates, adaptive gradient methods are one of the most important variants of SGD. Prior to~\cite{https://doi.org/10.48550/arxiv.2106.08208} by Huang et al., substantial work existed for adaptive gradient methods, though the focus was typically
 on either the empirical or theoretical side and only applied to some specific problem.~\cite{https://doi.org/10.48550/arxiv.2106.08208} proposes SUPER-ADAM, a faster and universal framework of adaptive gradients, to address this gap.
@@ -348,7 +349,7 @@ Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walk-through
 	In \hyperref[fig2]{Figure 2}, when $\mathcal{X}\subset\mathbb{R}^d$ and given $\mu_t = \frac{k}{m+t)^{1/3})}$ and $\alpha_{t+1}=c\mu^2_t$ for all $t\geq 0, 0 < \gamma \leq \frac{\rho m^{1/3}}{4kL}, \frac{1}{k^3} + \frac{10L^2 \gamma^2}{\rho^2}\leq c\leq \frac{m^{2/3}}{k^2}$,
 	$m\geq\max\left(\frac{3}{2}, k^3, \frac{8^{3/2}}{(3k)^{3/2}}\right)$ and $k > 0$, we have
 	\begin{equation}
-		\label{eq63}
+		\label{eq61}
 		\frac{1}{T}\sum^T_{t=1}\mathbb{E}||\mathcal{G}_{\mathcal{X}}(x_t, \nabla f(x_t), \gamma)||\leq
 		\frac{1}{T}\sum^T_{t=1}\mathbb{E}[\mathcal{M}_t]\leq
 		\frac{2\sqrt{2G}m^{1/6}}{T^{1/2}} + \frac{2\sqrt{2G}}{T^{1/3}},
@@ -386,7 +387,7 @@ Convergence analysis of SUPER-ADAM utilizes bounds of $\mu_t, \alpha_{t+1}, c,$ 
 $\phi_{t+1} - \phi_t$ and defining a gradient mapping $\mathcal{G}_{\mathcal{X}}(x_t, \nabla f(x_t),\gamma) = \frac{1}{\gamma}(x_t - x^+_{t+1})$, where $x^+_{t+1} = \arg\min_{x\in\mathcal{X}}\{\langle\nabla f(x_t), x\rangle + \frac{1}{\gamma} V_t(x,x_t)\}$,
 it can then be shown that step 9 of SUPER-ADAM algorithm is equivalent to the generalized projection problem $\tilde{x}_{t+1} = \arg\min_{x\in\mathcal{X}}\left\{\langle g_t, x\rangle + \frac{1}{\gamma}V_t (x,x_t)\right\}$.
 Defining a measure $\mathcal{M}_t\coloneqq\frac{1}{\rho}||\nabla f(x_t) - g_t|| + \frac{1}{\gamma}||\tilde{x}_{t+1} - x_t||$,
-we can then bound the sum of the expected gradient mappings over $T$ iterations by the summation of $\mathbb{E}[\mathcal{M}_t]$ over all $T$, for which an upper bound is found thus giving \hyperref[eq63]{(3)}.
+we can then bound the sum of the expected gradient mappings over $T$ iterations by the summation of $\mathbb{E}[\mathcal{M}_t]$ over all $T$, for which an upper bound is found thus giving \hyperref[eq61]{(1)}.
 \subsection{Discussion}
 SUPER-ADAM achieves convergence rates that either match or exceed previous state-of-the-art while imposing much weaker assumptions and allowing for an universal adaptive learning rate between different types of problems contexts.
 Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208} is presented in the appendix and gives a comparison of the complexities, convergence rates, adaptive learning rates, and assumptions between SUPER-ADAM and previous work including Adam, AdaGrad-Norm, AdaBelief, and STORM.
