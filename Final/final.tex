@@ -142,7 +142,7 @@ The main results of the paper are convergence bounds using the ER condition for 
 	Thus, given $\epsilon > 0$ and using step size $\gamma = \frac{1}{L}\min\{\frac{\mu\epsilon}{2\sigma^2}, \frac{1}{1+2\rho/\mu}\}$ we have that
 	\begin{equation}
 		\label{eq33}
-		k\geq \frac{L}{\mu}\max\{\frac{2\sigma^2}{\mu\epsilon}, 1+\frac{2\rho}{\mu}\}\log\left(\frac{2(f(x^0) - f^*)}{\epsilon}\right) \implies \mathbb{E}[f(x^k) - f^*]\leq \epsilon.
+		k\geq \frac{L}{\mu}\max\Big\{\frac{2\sigma^2}{\mu\epsilon}, 1+\frac{2\rho}{\mu}\Big\}\log\left(\frac{2(f(x^0) - f^*)}{\epsilon}\right) \implies \mathbb{E}[f(x^k) - f^*]\leq \epsilon.
 	\end{equation}
 	When the function interpolates the data, SGD converges to the solution at a linear rate.
 \end{theorem}
@@ -390,7 +390,7 @@ Defining a measure $\mathcal{M}_t\coloneqq\frac{1}{\rho}||\nabla f(x_t) - g_t|| 
 we can then bound the sum of the expected gradient mappings over $T$ iterations by the summation of $\mathbb{E}[\mathcal{M}_t]$ over all $T$, for which an upper bound is found thus giving \hyperref[eq61]{(1)}.
 \subsection{Discussion}
 SUPER-ADAM achieves convergence rates that either match or exceed previous state-of-the-art while imposing much weaker assumptions and allowing for an universal adaptive learning rate between different types of problems contexts.
-See \textit{Figure 3} in the Appendix for Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208}, which gives a comparison of the complexities, convergence rates, adaptive learning rates, and assumptions between SUPER-ADAM and previous work including Adam, AdaGrad-Norm, AdaBelief, and STORM.
+See \hyperref[fig3]{Figure 3} in the Appendix for Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208}, which gives a comparison of the complexities, convergence rates, adaptive learning rates, and assumptions between SUPER-ADAM and previous work including Adam, AdaGrad-Norm, AdaBelief, and STORM.
 Empirical evaluation of SUPER-ADAM is conducted with image classification on CIFAR-10, CIFAR-100 and Image Net dataset, as well as language modeling on the Wiki-Text2 dataset. SUPER-ADAM consistently outperformed the existing adaptive algorithms,
 as in Figures 1-5 in~\cite{https://doi.org/10.48550/arxiv.2106.08208}.
 \section{Additional Discussion \& Comments}
