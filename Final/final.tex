@@ -178,7 +178,7 @@ Recent evidence suggests a QC structure for loss functions in NNs~\cite{Zhou2019
 For PL functions, SGD was previously shown to converge at a rate of $O(1/\sqrt{k})$ assuming bounded gradients~\cite{Karimi2016LinearCO}. Assuming in addition the interpolation and SGC, a linear rate was achieved in Vaswani et al. 2019, but with a suboptimal dependence on the condition number
 of the function. This work achieves linear convergence to a neighborhood for PL functions.
 
-Recently, Khaled and Richtarik (2020)~\cite{https://doi.org/10.48550/arxiv.2002.03329} present convergence analysis of SGD in nonconvex setting, relying on the ABC assumption (\textit{equation \hyperref[eqa1]{A.1} in Appendix}),
+Recently, Khaled and Richtarik (2020)~\cite{https://doi.org/10.48550/arxiv.2002.03329} present convergence analysis of SGD in nonconvex setting, relying on the ABC assumption (\textit{\hyperref[eqa1]{equation A.1} in Appendix}),
 of which all previously discussed assumptions SGC, WGC, ES, and ER are special cases by taking different values for $A,B,C$. Whereas
 \hyperref[them32]{Theorem 3.2} above is less general and therefore stronger than Theorem 3 in Khaled and Richtarik's work, unlike~\cite{https://doi.org/10.48550/arxiv.2002.03329}, \hyperref[them32]{Theorem 3.2} does not depend on total number of steps and this allows practitioners to simply
 observe SGD progress and stop when a desired tolerance is achieved.
