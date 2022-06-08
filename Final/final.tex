@@ -230,11 +230,8 @@ In a multistage setting, let $\alpha_i$, $\beta_i$ and $T_i$ are learning rate (
 	\label{theom43} Assume $f:\mathbb{R}^d \rightarrow \mathbb{R}$ satisfies General Assumptions, restrict the parameters in each stage of Multistage SGDM so that 
 \begin{equation}
 \label{eq41}
-\begin{split}
-\frac{\alpha_i\beta_i}{1 - \beta_i} &\equiv A_1 \ \ \ \ i = 1,...,n\\
-\alpha_iT_i &\equiv A_2 \ \ \ \ i = 1,...,n\\
-0 \leq \beta_1 &\leq \beta_2 \leq ... \leq \beta_n \leq 1
-\end{split}
+\frac{\alpha_i\beta_i}{1 - \beta_i} \equiv A_1, \alpha_iT_i \equiv A_2 \ \ \text{for}  \ \ i = 1,...,n \ \ \ \text{and} \ \ \
+0 \leq \beta_1 \leq \beta_2 \leq ... \leq \beta_n \leq 1
 \end{equation}
 and $A_1, A_2$ are properly chosen constants. Let $A_1 = \frac{1}{24\sqrt{2}L}$ and $A_2$ be large enough so that $\beta_i^{2T_i} \leq \frac{1}{2}$ for $i = 1,...,n$. In addition, let
 \[
@@ -317,10 +314,7 @@ where $T > 0$ is the total number of iterations.
 \end{theorem}
 \begin{corollary}[Stochastic RMSProp - Stationary Point]
 	\label{coro51}
-	Let all assumptions in Theorem 5.2 hold. In addition, assume $D_0 = 0$ in (\hyperref[eq51]{1}), then for stochastic RMSProp we have,
-\[
-\min_{t \in (1, T]} \|\tilde{g}_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{\sqrt{T}}\Big), \ \ \ \forall \ T \geq 4
-\]
+	See \hyperref[coro51appendix]{Corollary A.1} in Appendix
 \end{corollary}
 Next, we explain the methodology used to derive the above results. Recall that the core of the RMSProp algorithm is the following updating rule:
 \[
@@ -363,7 +357,7 @@ on either the empirical or theoretical side and only applied to some specific pr
 In addition to \textit{General Assumptions}, we assume for the $\tau = 0$ case to be described in the Main Results \& Methodology that the objective function $\min_{x \in \mathbb{R}^d} f(x)$ is smooth. We also assume for both cases of $\tau=0,1$ that the smallest eigenvalue of the adaptive matrix
 in SUPER-ADAM is bounded below: Assume the adaptive matrix $H_t$ for all $t\geq 1$ satisfies $H_t \succeq \rho I_d\succ 0$, and $\rho > 0$ denotes a lower bound of the smallest eigenvalue of $H_t$ for all $t\geq 1$.
 \subsection{Main Results \& Methodology}
-The main results of this paper are convergence analyses of SUPER-ADAM in both theoretical and practical settings, demonstrating convergence rates that either match or exceed that of state-of-the-art. See Figure 2 in Appendix for an overview of the SUPER-ADAM algorithm and
+The main results of this paper are convergence analyses of SUPER-ADAM in both theoretical and practical settings, demonstrating convergence rates that either match or exceed that of state-of-the-art. See \hyperref[fig2]{Figure 2} in Appendix for an overview of the SUPER-ADAM algorithm and
 Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walkthrough of the algorithm.
 \begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 1$)]
 	We use the momentum-based variance reduced gradient estimator in~\cite{https://doi.org/10.48550/arxiv.1905.10018, https://doi.org/10.48550/arxiv.1905.05920}
@@ -377,14 +371,7 @@ Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walkthrough 
 	where $G = \frac{f(x_1) - f^*}{k\rho\gamma} + \frac{m^{1/3}\sigma^2}{8k^2 L^2 \gamma^2} + \frac{k^2 c^2 \sigma^2}{4L^2 \gamma^2}\ln(m+T)$.
 \end{theorem}
 \begin{corollary}
-	In SUPER-ADAM algorithm, when $X=\mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)}^{1/3}$ and $\alpha_{t+1} = c\mu^2_t$ for all $t\geq 0, \gamma = \frac{\rho m^{1/3}}{vkL}(v\geq 4), \frac{1}{k^3} + \frac{10L^2 \gamma^2}{\rho^2}\leq c \leq \frac{m^{2/3}}{k^2},
-	m\geq\max(\frac{3}{2}, k^3, \frac{8^{3/2}}{(3k)^{3/2}}\right)$ and $k > 0$, we have
-	\begin{equation}
-		\frac{1}{T}\sum^T_{t=1}\mathbb{E}||\nabla f(x_t)||\leq
-		\frac{\sqrt{\frac{1}{T}\sum^T_{t=1}\mathbb{E}||H_t||^2}}{\rho}
-		\left(\frac{2\sqrt{2G'}}{T^{1/2}} + \frac{2\sqrt{2G'}}{m^{1/6}T^{1/3}}\right),
-	\end{equation}
-	where $G'=vL(f(x_1) - f^*) + \frac{v^2 \sigma^2}{8} + \frac{v^2 k^4 c^2 \sigma^2}{4m^{1/3}}\ln(m+T)$.
+		See \hyperref[coro51appendix]{Corollary A.2} in Appendix
 \end{corollary}
 \textbf{Remark.} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $c=O(1)$ and $G = O(c^2 \sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has a convergence rate of $\tilde{O}\left(\frac{1}{T^{1/3}}\right)$.
 Let $\frac{1}{T^{1/3}}\leq \epsilon$, we have $T\geq \epsilon^{-3}$. Since SUPER-ADAM only requires computing two stochastic gradients at each iteration (e.g., only need tocompute stochastic gradients $\nabla f(x_{t+1}; s_{j_{t+1}})$
@@ -401,13 +388,7 @@ and $\nabla f(x_t; s_{j_{t+1}})$ to estimate $g_{t+1}$), and needs $T$ iteration
 	where $M = \frac{f(x_1) - f^*}{\rho\gamma k} + \frac{2\sigma^2}{\rho\gamma kL} + \frac{2m\sigma^2}{\rho\gamma kL}\ln(m+T)$.
 \end{theorem}
 \begin{corollary}
-	In SUPER-ADAM algorithm, when $X=\mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)^{1/2}}, \alpha_{t+1} = c\mu_t$ for all $t\geq 0, k > 0, \gamma = \frac{\rho m^{1/2}}{vLk}(v\geq 8), \frac{8L\gamma}{\rho}\leq c \leq \frac{m^{1/2}}{k}$, and $m\geq k^2$, we haev
-	\begin{equation}
-		\frac{1}{T}\sum^T_{t=1}\mathbb{E}||\nabla f(x_t)||\leq
-		\frac{\sqrt{\frac{1}{T}\sum^T_{t=1}\mathbb{E}||H_t||^2}}{\rho}
-		\left(\frac{2\sqrt{2M'}}{T^{1/2}} + \frac{2\sqrt{2M'}}{m^{1/4}T^{1/4}}\right),
-	\end{equation}
-	where $M'=vL(f(x_1) - f^*) + 2v\sigma^2 + 2vm\sigma^2 \ln(m+T)$.
+	See \hyperref[coro51appendix]{Corollary A.3} in Appendix
 \end{corollary}
 \textbf{Remark.} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $M = O(\sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has convergence rate of $\tilde{O}\left(\frac{1}{T^{1/4}}\right)$.
 Considering $\frac{1}{T^{1/4}}\leq\epsilon$, we have $T\geq\epsilon^{-4}$. Since our algorithm requires computing a stochastic gradient at each iteration and needs $T$ iterations, SUPER-ADAM ($\tau = 0$) has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an
@@ -437,9 +418,8 @@ Table 1 from~\cite{https://doi.org/10.48550/arxiv.2106.08208} is presented in th
 Empirical evaluation of SUPER-ADAM is conducted with image classification on CIFAR-10, CIFAR-100 and Image Net dataset, as well as language modeling on the Wiki-Text2 dataset. SUPER-ADAM consistently outperformed the existing adaptive algorithms,
 as in Figures 1-5 in~\cite{https://doi.org/10.48550/arxiv.2106.08208}.
 \section{Additional Discussion \& Comments}
-The study of optimizers without the bounded gradient assumption is a rapidly-developing subfield that has lately been receiving more attention from the optimization community. (e.g, on the convergence of AdaGrad (Jin et al. 2022, Faw et al. 2022)).
-Various new techniques have been utilized to overcome the challenge of removing this assumption, and some results are theoretically sound but have limitations in the practical settings. Multistage stochastic optimization is widely used in practice but its convergence has not been explored much theoretically.
-\section{Future Research}
+The study of optimizers without the bounded gradient assumption is a rapidly-developing subfield that has lately been receiving more attention from the optimization community. (e.g, on the convergence of AdaGrad by \cite{jin2022on} and \cite{https://doi.org/10.48550/arxiv.2202.05791}).
+Throughout this report, we have seen that various new techniques have been utilized to overcome the challenge of removing this assumption, and some results are theoretically sound but have limitations in the practical settings. Moreover, we would like to mention that Multistage stochastic optimization is widely used in practice but its convergence has not been explored much theoretically, so hopefully there is more research work towards this particular direction in the future.
 \newpage
 \bibliography{final}
 
@@ -473,10 +453,38 @@ We say that $ABC$ holds with $A,B,C > 0$ if
 	example, but for each counter example in which Adam diverges, there exists a larger $\beta$ that can make Adam
 	converge. Step size is set as $\alpha_t = \frac{1}{\sqrt{t}}$.}
 \end{figure}
+\begin{corollary}
+	\label{coro51appendix}
+	Let all assumptions in Theorem 5.2 hold. In addition, assume $D_0 = 0$ in (\hyperref[eq51]{1}), then for stochastic RMSProp we have,
+	\[
+	\min_{t \in (1, T]} \|\tilde{g}_t\|_1 \leq \mathcal{O}\Big(\frac{\log T}{\sqrt{T}}\Big), \ \ \ \forall \ T \geq 4
+	\]
+\end{corollary}
 \begin{figure}[h]
-\label{fig2}
-\centering
-\includegraphics[scale = 0.5]{super-adam-algo.png}
-\caption{SUPER-ADAM Algorithm}
+	\label{fig2}
+	\centering
+	\includegraphics[scale = 0.5]{super-adam-algo.png}
+	\caption{SUPER-ADAM Algorithm}
 \end{figure}
+\begin{corollary}
+	\label{coro61appendix}
+	In SUPER-ADAM algorithm, when $X=\mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)}^{1/3}$ and $\alpha_{t+1} = c\mu^2_t$ for all $t\geq 0, \gamma = \frac{\rho m^{1/3}}{vkL}(v\geq 4), \frac{1}{k^3} + \frac{10L^2 \gamma^2}{\rho^2}\leq c \leq \frac{m^{2/3}}{k^2},
+	m\geq\max(\frac{3}{2}, k^3, \frac{8^{3/2}}{(3k)^{3/2}})$ and $k > 0$, we have
+	\begin{equation}
+		\frac{1}{T}\sum^T_{t=1}\mathbb{E}||\nabla f(x_t)||\leq
+		\frac{\sqrt{\frac{1}{T}\sum^T_{t=1}\mathbb{E}||H_t||^2}}{\rho}
+		\left(\frac{2\sqrt{2G'}}{T^{1/2}} + \frac{2\sqrt{2G'}}{m^{1/6}T^{1/3}}\right),
+	\end{equation}
+	where $G'=vL(f(x_1) - f^*) + \frac{v^2 \sigma^2}{8} + \frac{v^2 k^4 c^2 \sigma^2}{4m^{1/3}}\ln(m+T)$.
+\end{corollary}
+\begin{corollary}
+	\label{coro62appendix}
+	In SUPER-ADAM algorithm, when $X=\mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)^{1/2}}, \alpha_{t+1} = c\mu_t$ for all $t\geq 0, k > 0, \gamma = \frac{\rho m^{1/2}}{vLk}(v\geq 8), \frac{8L\gamma}{\rho}\leq c \leq \frac{m^{1/2}}{k}$, and $m\geq k^2$, we haev
+	\begin{equation}
+		\frac{1}{T}\sum^T_{t=1}\mathbb{E}||\nabla f(x_t)||\leq
+		\frac{\sqrt{\frac{1}{T}\sum^T_{t=1}\mathbb{E}||H_t||^2}}{\rho}
+		\left(\frac{2\sqrt{2M'}}{T^{1/2}} + \frac{2\sqrt{2M'}}{m^{1/4}T^{1/4}}\right),
+	\end{equation}
+	where $M'=vL(f(x_1) - f^*) + 2v\sigma^2 + 2vm\sigma^2 \ln(m+T)$.
+\end{corollary}
 \end{document}
