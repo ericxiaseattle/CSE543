@@ -125,24 +125,11 @@ The main results of the paper are convergence bounds using the ER condition for 
 
 	Furthermore, for $\gamma < \frac{\zeta}{2\rho + L}$, we have that
 
-	\textbf{1}. If $\forall k\in\mathbb{N}$, $\gamma_k = \gamma \equiv \frac{1}{2}\frac{\zeta}{(2\rho + L)}$ then $\forall k\in\mathbb{N}$,
-
-	\[
-		\substack{\min \\ t=0,\dots, k-1}\mathbb{E}[f(x^t) - f(x^*)]\leq 2r_0 \frac{2\rho + L}{\zeta^2 k} + \frac{\sigma^2}{2\rho + L}.
-	\]
-
+	\textbf{1}. If $\forall k\in\mathbb{N}$, $\gamma_k = \gamma \equiv \frac{1}{2}\frac{\zeta}{(2\rho + L)}$ then $\forall k\in\mathbb{N},\ \substack{\min \\ t=0,\dots, k-1}\mathbb{E}[f(x^t) - f(x^*)]\leq 2r_0 \frac{2\rho + L}{\zeta^2 k} + \frac{\sigma^2}{2\rho + L}$. \\
 	\textbf{2}. Suppose SGD is run for $T$ iterations. If $\gamma_k = \frac{\gamma}{\sqrt{T}}$ for all $k$ from 0 to $T-1$, then
-
-	\[
-		\substack{\min \\ t=0,\dots, T-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{r_0 + 2\gamma^2 \sigma^2}{\gamma\sqrt{T}}.
-	\]
-
-	\textbf{3}. If $\forall k\in\mathbb{N},\ \gamma_k = \frac{\gamma}{\sqrt{k+1}}$ then $\forall k \in\mathbb{N}$,
-
-	\[
-		\substack{\min \\ t=0,\dots, k-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{1}{4\gamma} \frac{r_0 + 2\gamma^2 \sigma^2 (\log{(k)} + 1)}{\zeta (\sqrt{k} - 1) - \gamma(\rho + L/2)(\log{(k)} + 1)},
-	\]
-
+	\makebox[\textwidth]{$\substack{\min \\ t=0,\dots, T-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{r_0 + 2\gamma^2 \sigma^2}{\gamma\sqrt{T}}$}
+	\textbf{3}. If $\forall k\in\mathbb{N},\ \gamma_k = \frac{\gamma}{\sqrt{k+1}}$ then $\forall k \in\mathbb{N}$, \\
+	\makebox[\textwidth]{$\substack{\min \\ t=0,\dots, k-1} \mathbb{E}[f(x^t) - f(x^*)] \leq \frac{1}{4\gamma} \frac{r_0 + 2\gamma^2 \sigma^2 (\log{(k)} + 1)}{\zeta (\sqrt{k} - 1) - \gamma(\rho + L/2)(\log{(k)} + 1)}$,}
 	which converges at a rate $\mathcal{O}\left(\frac{\log(k)}{\sqrt{k}}\right)$.
 \end{theorem}
 
@@ -195,7 +182,8 @@ Recent evidence suggests a QC structure for loss functions in NNs~\cite{Zhou2019
 For PL functions, SGD was previously shown to converge at a rate of $O(1/\sqrt{k})$ assuming bounded gradients~\cite{Karimi2016LinearCO}. Assuming in addition the interpolation and SGC, a linear rate was achieved in Vaswani et al. 2019, but with a suboptimal dependence on the condition number
 of the function. This work achieves linear convergence to a neighborhood for PL functions.
 
-Recently, Khaled and Richtarik (2020)~\cite{https://doi.org/10.48550/arxiv.2002.03329} present convergence analysis of SGD in nonconvex setting, relying on the ABC assumption (A.1), of which all previously discussed assumptions SGC, WGC, ES, and ER are special cases by taking different values for $A,B,C$. Whereas
+Recently, Khaled and Richtarik (2020)~\cite{https://doi.org/10.48550/arxiv.2002.03329} present convergence analysis of SGD in nonconvex setting, relying on the ABC assumption (\textit{equation A.1 in Appendix}),
+of which all previously discussed assumptions SGC, WGC, ES, and ER are special cases by taking different values for $A,B,C$. Whereas
 Theorem 3.2 above is less general and therefore stronger than Theorem 3 in Khaled and Richtarik's work, unlike~\cite{https://doi.org/10.48550/arxiv.2002.03329}, Theorem 3.2 does not depend on total number of steps and this allows practitioners to simply
 observe SGD progress and stop when a desired tolerance is achieved.
 
@@ -373,9 +361,7 @@ Section 3 of \cite{https://doi.org/10.48550/arxiv.2106.08208} for a walkthrough 
 \begin{corollary}
 		See \hyperref[coro51appendix]{Corollary A.2} in Appendix
 \end{corollary}
-\textbf{Remark.} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $c=O(1)$ and $G = O(c^2 \sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has a convergence rate of $\tilde{O}\left(\frac{1}{T^{1/3}}\right)$.
-Let $\frac{1}{T^{1/3}}\leq \epsilon$, we have $T\geq \epsilon^{-3}$. Since SUPER-ADAM only requires computing two stochastic gradients at each iteration (e.g., only need tocompute stochastic gradients $\nabla f(x_{t+1}; s_{j_{t+1}})$
-and $\nabla f(x_t; s_{j_{t+1}})$ to estimate $g_{t+1}$), and needs $T$ iterations. Thus, SUPER-ADAM ($\tau = 1$) has a gradient complexity of $2T = \tilde{O}(\epsilon^{-3})$ for finding an $\epsilon$-stationary point.
+\textbf{Remark.} SUPER-ADAM $(\tau = 1)$ has a gradient complexity of $2T = \tilde{O}(\epsilon^{-3})$ for finding an $\epsilon$-stationary point. \textit{See Remark A.2 in Appendix for proof.}
 \begin{theorem}[Convergence Analysis of SUPER-ADAM ($\tau = 0$)]
 	We use the basic momentum stochastic gradient estimator~\cite{https://doi.org/10.48550/arxiv.1412.6980}.
 	In Figure 2, when $\mathcal{X}\subset \mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)^{1/2}}, \alpha_{t+1} = c\mu_t$ for all $t\geq 0, k > 0, 0 < \gamma \leq \frac{\rho m^{1/2}}{8Lk}, \frac{8L\gamma}{\rho}\leq c\leq \frac{m^{1/2}}{k}$,
@@ -390,27 +376,19 @@ and $\nabla f(x_t; s_{j_{t+1}})$ to estimate $g_{t+1}$), and needs $T$ iteration
 \begin{corollary}
 	See \hyperref[coro51appendix]{Corollary A.3} in Appendix
 \end{corollary}
-\textbf{Remark.} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $M = O(\sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has convergence rate of $\tilde{O}\left(\frac{1}{T^{1/4}}\right)$.
-Considering $\frac{1}{T^{1/4}}\leq\epsilon$, we have $T\geq\epsilon^{-4}$. Since our algorithm requires computing a stochastic gradient at each iteration and needs $T$ iterations, SUPER-ADAM ($\tau = 0$) has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an
-$\epsilon$-stationary point.
+\textbf{Remark.} SUPER-ADAM $(\tau = 0)$ has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an $\epsilon$-stationary point. \textit{See Remark A.3 in Appendix for proof.}
 
 We will now discuss the primary methodology used to achieve the above results. For the $\tau = 1$ case, the stochastic gradient estimator uses the same as that in STORM~\cite{https://doi.org/10.48550/arxiv.1905.10018}, however in SUPER-ADAM, a weighted solution $x_{t+1}$ is introduced at step 10 by
 using momentum update, allowing different ALRs and variance reduced techniques to be flexibly used at step 9. This is in comparison to the simple GD iteration with a specific monotonically decreasing ALR used in STORM. Similarly, although the $\tau = 0$ case uses the
-same stochastic gradient estimator used in some Adam-type algorithms~\cite{https://doi.org/10.48550/arxiv.1412.6980, https://doi.org/10.48550/arxiv.1904.09237, https://doi.org/10.48550/arxiv.2010.07468} these algorithms use a decreasing learning rate
+same stochastic gradient estimator used in some Adam-type algorithms~\cite{https://doi.org/10.48550/arxiv.1412.6980, https://doi.org/10.48550/arxiv.1904.09237, https://doi.org/10.48550/arxiv.2010.07468}, these algorithms use a decreasing learning rate
 $\eta_t = \frac{\eta}{\sqrt{t}}$, whereas SUPER-ADAM only uses a constant learning rate $\gamma$ besides an ALR. Moreover, SUPER-ADAM introduces the weighted solution $x_{t+1}$ at step 10 with a decreasing
-parameter $\mu_t = \frac{k}{\sqrt{m+t}}$ and uses a decreasing parameter $\alpha_{t+1} = c\mu_t$ in the gradient estimator, while these adam-type algorithms only use a constant parameter $\alpha_1\in (0,1)$ in their gradient estimators. In other words, SUPER-ADAM uses the
+parameter $\mu_t = \frac{k}{\sqrt{m+t}}$ and uses a decreasing parameter $\alpha_{t+1} = c\mu_t$ in the gradient estimator, while these Adam-type algorithms only use a constant parameter $\alpha_1\in (0,1)$ in their gradient estimators. In other words, SUPER-ADAM uses the
 decreasing parameters $\mu_t$ and $\alpha_{t+1}$ to control noises in the gradient estimator s.t. it doesn't require the bounded gradient assumption in the convergence analysis.
 
 Convergence analysis of SUPER-ADAM utilizes bounds of $\mu_t, \alpha_{t+1}, c,$ and $\gamma$ to form a Lyapnuov function $\phi_t = \mathbb{E}[f(x_t) + \frac{\rho}{8L^2 \gamma}\frac{1}{\mu_{t-1}}||\nabla f(x_t) - g_t||^2]$ for any $t\geq 1$. Considering
 $\phi_{t+1} - \phi_t$ and defining a gradient mapping $\mathcal{G}_{\mathcal{X}}(x_t, \nabla f(x_t),\gamma) = \frac{1}{\gamma}(x_t - x^+_{t+1})$, where $x^+_{t+1} = \arg\min_{x\in\mathcal{X}}\{\langle\nabla f(x_t), x\rangle + \frac{1}{\gamma} V_t(x,x_t)\}$,
-it can then be shown that step 9 of SUPER-ADAM algorithm is equivalent to the generalized projection problem
-\begin{equation}
-	\tilde{x}_{t+1} = \arg\min_{x\in\mathcal{X}}\left\{\langle g_t, x\rangle + \frac{1}{\gamma}V_t (x,x_t)\right\}.
-\end{equation}
-Defining a measure $\mathcal{M}_t$ as follows:
-\begin{equation}
-	\mathcal{M}_t = \frac{1}{\rho}||\nabla f(x_t) - g_t|| + \frac{1}{\gamma}||\tilde{x}_{t+1} - x_t||,
-\end{equation}
+it can then be shown that step 9 of SUPER-ADAM algorithm is equivalent to the generalized projection problem $\tilde{x}_{t+1} = \arg\min_{x\in\mathcal{X}}\left\{\langle g_t, x\rangle + \frac{1}{\gamma}V_t (x,x_t)\right\}$.
+Defining a measure $\mathcal{M}_t\coloneqq\frac{1}{\rho}||\nabla f(x_t) - g_t|| + \frac{1}{\gamma}||\tilde{x}_{t+1} - x_t||$,
 we can then bound the sum of the expected gradient mappings over $T$ iterations by the summation of $\mathbb{E}[\mathcal{M}_t]$ over all $T$, for which an upper bound is found thus giving (3).
 \subsection{Discussion}
 SUPER-ADAM achieves convergence rates that either match or exceed previous state-of-the-art while imposing much weaker assumptions and allowing for an univeral adaptive learning rate between different types of problems contexts.
@@ -477,6 +455,9 @@ We say that $ABC$ holds with $A,B,C > 0$ if
 	\end{equation}
 	where $G'=vL(f(x_1) - f^*) + \frac{v^2 \sigma^2}{8} + \frac{v^2 k^4 c^2 \sigma^2}{4m^{1/3}}\ln(m+T)$.
 \end{corollary}
+\textbf{Remark A.2} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $c=O(1)$ and $G = O(c^2 \sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has a convergence rate of $\tilde{O}\left(\frac{1}{T^{1/3}}\right)$.
+Let $\frac{1}{T^{1/3}}\leq \epsilon$, we have $T\geq \epsilon^{-3}$. Since SUPER-ADAM only requires computing two stochastic gradients at each iteration (e.g., only need tocompute stochastic gradients $\nabla f(x_{t+1}; s_{j_{t+1}})$
+and $\nabla f(x_t; s_{j_{t+1}})$ to estimate $g_{t+1}$), and needs $T$ iterations. Thus, SUPER-ADAM ($\tau = 1$) has a gradient complexity of $2T = \tilde{O}(\epsilon^{-3})$ for finding an $\epsilon$-stationary point.
 \begin{corollary}
 	\label{coro62appendix}
 	In SUPER-ADAM algorithm, when $X=\mathbb{R}^d$ and given $\mu_t = \frac{k}{(m+t)^{1/2}}, \alpha_{t+1} = c\mu_t$ for all $t\geq 0, k > 0, \gamma = \frac{\rho m^{1/2}}{vLk}(v\geq 8), \frac{8L\gamma}{\rho}\leq c \leq \frac{m^{1/2}}{k}$, and $m\geq k^2$, we haev
@@ -487,4 +468,7 @@ We say that $ABC$ holds with $A,B,C > 0$ if
 	\end{equation}
 	where $M'=vL(f(x_1) - f^*) + 2v\sigma^2 + 2vm\sigma^2 \ln(m+T)$.
 \end{corollary}
+\textbf{Remark A.3} WLOG, let $\rho = O(1), k = O(1), m = O(1), \gamma = O(1)$, we have $M = O(\sigma^2 \ln(m+T)) = \tilde{O}(1)$. Thus, our algorithm has convergence rate of $\tilde{O}\left(\frac{1}{T^{1/4}}\right)$.
+Considering $\frac{1}{T^{1/4}}\leq\epsilon$, we have $T\geq\epsilon^{-4}$. Since our algorithm requires computing a stochastic gradient at each iteration and needs $T$ iterations, SUPER-ADAM ($\tau = 0$) has a gradient complexity of $T = \tilde{O}(\epsilon^{-4})$ for finding an
+$\epsilon$-stationary point.
 \end{document}
