@@ -1,5 +1,5 @@
 # CSE543
-UW Deep Learning CSE543/599I Spring 2022 Project LaTeX Files
+UW Deep Learning CSE543/599I Spring 2022 Project
 
 We plan to work on the convergence problem of optimizers without the bounded gradient assumption, surveying the following papers:
 1. [RMSProp](https://openreview.net/pdf?id=3UDSdyIcBDA)
